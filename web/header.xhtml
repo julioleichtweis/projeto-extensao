@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+ 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        
+    </h:head>
+    <body>
+        <ui:composition>
+            <b:navBar brandHref="#" inverse="true" fixed="top" fluid="true">
+                <b:navbarLinks pull="left">
+                    <b:navLink value="Nova solicitação de serviços" outcome="registrar_solicitacao.xhtml"></b:navLink>
+                    <b:navLink value="Consultar solicitação" outcome="consultar_solicitacao.xhtml"></b:navLink>
+                    <b:navLink value="Feed de solicitações" outcome="feed_solicitacoes.xhtml"></b:navLink>
+                    <b:navLink value="Ajuda" outcome="ajuda.xhtml"></b:navLink>
+                </b:navbarLinks>
+            </b:navBar>
+        </ui:composition>
+    </body>
+</html>

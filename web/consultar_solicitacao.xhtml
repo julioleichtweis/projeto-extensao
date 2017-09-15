@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Consulta de solicitação</title>
+        <h:outputStylesheet library="css" name="registarSolicitacao.css" />
+    </h:head>
+    <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
+        <ui:include src="header.xhtml"/>
+        <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
+        <b:form class="pesquisa">
+            <b:inputText label-small-screen="2" small-screen="6" required="true" style="width: 80%;margin: auto" label-style="width:100%;text-align: center;margin: 4% 0 3% 0;color: white"
+                         label="Código da requisição" value="#{consultarSolicitacaoMB.pesquisa}" placeholder="código do requerimento" 
+                         tooltip="pesquisa" validatorMessage="O código de requisição deve ser preenchido corretamente!">
+                <f:validateLength minimum="5" />
+            </b:inputText>
+            <b:commandButton value="pesquisar" action="#{consultarSolicitacaoMB.pesquisar()}" style="width: 60%;margin: 4% 0 4% 20%;background-color: blue;color: white;"/>
+        </b:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,117 @@
+body{
+    padding-top: 6rem;
+    width: 100%;
+}
+.titulo{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: black;
+    text-shadow: 2px 2px 0 gray;
+    font-size: 3rem;
+}
+#container{
+    width: 100%;
+    height: content-box;
+    position: relative;
+    z-index: 1;
+}
+#formularios{
+    height: 100%;
+    width: 100%;
+}
+.form_servico{
+    height: 100%;
+    min-width: 320px;
+    margin: auto;
+    padding: auto;
+    border: 2px appworkspace groove;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 90%;
+}
+.subtitulo{
+    margin: 4rem 0 4rem 0;
+    text-align: center;
+    color: maroon;
+}
+.file_upload{
+    width: 75%;
+    min-width: 250px;
+    margin-left: 4%;
+    margin-top: 20px;
+    min-height: 130px;
+    overflow: hidden;
+    float: left;
+    position: relative;
+}
+.form_informacoes_pessoais{
+    height: 100%;
+    padding: auto;
+    width: 90%;
+    min-width: 320px;
+    margin: auto;
+    margin-top: 7%;
+    border: 2px appworkspace groove;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.form_informacoes_input{
+    margin: 1% 0 0 0;
+    padding: 0 0 0 0;
+}
+.continuar{
+    width: 70%;
+    margin: 5% 0 5% 15%;
+    background-color: blue;
+    color: white;
+    height: 50px;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 8px;
+    padding-top: 10px;
+}
+.confirmacao{
+    height: 80%;
+    min-height: 80%;
+    max-height: 80%;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    z-index: 2;
+    position: fixed;
+    border: 4px solid black;
+}
+.botao_confirmar{
+    width: 70%;
+    float: bottom;
+    position: relative;
+    height: 50px;
+    margin: 0 0 0 15%;
+    background-color: blue;
+    color: white;
+}
+
+.local_foto{
+    height: 50%;
+    margin: auto;
+    border: 2px solid white;
+}
+
+.pesquisa{
+    width: 90%;
+    margin: auto;
+    margin-top: 5%;
+    border: 2px appworkspace groove;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.login{
+    width: 50%;
+    margin: auto;
+    border: 2px appworkspace groove;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+
+

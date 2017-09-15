@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="registarSolicitacao.css" />
+        <script src="resources/javascript/scripts.js" type="text/javascript"></script>
+        <script src="resources/javascript/googleMaps.js" type="text/javascript"></script>
+        <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCDeDTdxDcvnRufBvILmxZUgD3U947b9t4" async="" defer="defer" type="text/javascript"></script>
+        <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+    </h:head>
+    <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
+        <ui:include src="header_administracao.xhtml"/>
+        <h1 class="titulo">Mapa com a localização das solicitações</h1>
+        <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="14" type="HYBRID" style="width:90%;height:400px;margin:3% 0 7% 5%"
+                model="#{admGeorreferenciacaoMB.mapa}" onPointClick="handlePointClick(event);" widgetVar="map">
+        </p:gmap>
+    </h:body>
+</html>
+
