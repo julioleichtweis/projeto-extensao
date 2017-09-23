@@ -36,14 +36,23 @@ body{
     color: maroon;
 }
 .file_upload{
-    width: 75%;
+    width: 92%;
     min-width: 250px;
     margin-left: 4%;
     margin-top: 20px;
-    min-height: 130px;
+    min-height: 100px;
     overflow: hidden;
     float: left;
     position: relative;
+}
+.imagem{
+    width: 75%;
+    margin-left: 12%;
+    height: 250px;
+    /*max-height: 300px;
+    background-color: black;
+    position: relative;
+    float: left;*/
 }
 .form_informacoes_pessoais{
     height: 100%;

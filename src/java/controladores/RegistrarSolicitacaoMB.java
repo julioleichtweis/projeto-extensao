@@ -1,5 +1,6 @@
 package controladores;
 
+import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -11,7 +12,10 @@ import modelos.Localizacao;
 
 import modelos.Protocolo;
 import modelos.Requerente;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.map.MarkerDragEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
@@ -34,10 +38,11 @@ public class RegistrarSolicitacaoMB implements Serializable {
     private MapModel mapa;
       
     private UploadedFile file;
+    private StreamedContent image;
 
     private boolean confirmacao;
 
-    public RegistrarSolicitacaoMB() {
+    public RegistrarSolicitacaoMB(){
     }
 
     @PostConstruct
@@ -53,6 +58,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
         mapa = new DefaultMapModel();
         
         confirmacao = false;
+        image = null;
     }
 
     @PreDestroy
@@ -105,6 +111,14 @@ public class RegistrarSolicitacaoMB implements Serializable {
     public void setConfirmacao(boolean confirmacao) {
         this.confirmacao = confirmacao;
     }
+
+    public StreamedContent getImage() {
+        return image;
+    }
+
+    public void setImage(StreamedContent image) {
+        this.image = image;
+    }
       
     public void addMarker() {
         Marker marker = new Marker(new LatLng(localizacao.getLatitude(),localizacao.getLongitude()) ,localizacao.getTitulo());
@@ -139,11 +153,24 @@ public class RegistrarSolicitacaoMB implements Serializable {
         
     }
 
-    public void upload() {
-        /*if(file != null) {
-            FacesMessage message = new FacesMessage("Succesful", file.getFileName() + " is uploaded.");
+    public void upload(FileUploadEvent evt) throws IOException{
+        file = evt.getFile();
+
+        if (file != null){
+            image = new DefaultStreamedContent(file.getInputstream());
+            //InputStream input = file.getInputstream();
+            //String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+            //File saida = new File(path + "/resources/images/teste.png");
+            //OutputStream os = new FileOutputStream(saida);
+            //imagem = new Imagem();
+            //imagem.setDados(IOUtils.toByteArray(file.getInputstream()));
+            //imagem.setNome(file.getFileName());
+            //os.write(imagem.getDados());
+            //os.flush();
+            //imagemDAO.insert(imagem);
+            FacesMessage message = new FacesMessage("Upload realizado com sucesso", file.getFileName());
             FacesContext.getCurrentInstance().addMessage(null, message);
-        }*/
+        }
     }
     
 }

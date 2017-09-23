@@ -33,19 +33,26 @@
                 <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
                 <b:container class="form_servico" style="width: 90%;">
                     <h3 class="subtitulo">Descrição do servico</h3>
-                    <h:outputText value="Adicionar foto" style="margin-top: 10px;color: chocolate;float: left;position: relative;font-size: 16px;margin-left: 3%"/>
-                    <p:fileUpload class="file_upload" fileUploadListener="#{registrarSolicitacaoMB.upload}" fileLimit="1" fileLimitMessage="Excedido Limite de arquivos"
-                                  cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Anexar"
-                                  invalidFileMessage="Somente arquivos .jpg, .png ou .gif"
-                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" value="#{registrarSolicitacaoMB.file}"
-                                  mode="advanced" skinSimple="true" />
-                    <b:inputTextarea class="input_descricao" label-style="text-align : right;margin-top: 10px;color: chocolate;min-width: 100px" style="margin: auto;height: 180px;margin-bottom: 5%"
-                                     value="#{registarSolicitacaoMB.protocolo.descricao}" label-small-screen="2" small-screen="9" label="Descrição" tooltip="descrição do serviço" required="true" validatorMessage="A descrição é de preenchimento obrigatorio!">
+                    <h:outputText value="Adicionar foto" style="margin-top: 10px;color: chocolate;float: left;position: relative;font-size: 15px;margin-left: 3%"/>
+                    <h:form enctype="multipart/form-data">
+                        <p:growl id="messages3" showDetail="true" />
+                        <p:fileUpload value="#{registarSolicitacaoMB.file}" class="file_upload"
+                                      cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Anexar"
+                                      fileUploadListener="#{registarSolicitacaoMB.upload}"
+                                      invalidFileMessage="Somente arquivos .jpg, .png ou .gif"
+                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="true"
+                                      mode="advanced" skinSimple="true" update="imagem" required="true"
+                                      sizeLimit="1000000" invalidSizeMessage="Tamanho maximo da imagem : 1mb"/>
+                        <p:graphicImage id="imagem" value="#{registarSolicitacaoMB.image}" alt=" " cache="false"
+                                        style="width: 80%;height: 10%;margin: 1% 0 3% 10%;max-height: 350px"/>
+                    </h:form>
+                    <b:inputTextarea class="input_descricao" label-style="text-align : left;margin-top: 10px;color: chocolate;min-width: 100px;margin-left: 4%" style="margin: auto;height: 180px;margin-bottom: 5%;width: 90%;margin-left: 5%"
+                                     value="#{registarSolicitacaoMB.protocolo.descricao}" label="Descrição" tooltip="descrição do serviço" required="true" validatorMessage="A descrição é de preenchimento obrigatorio!">
                         <f:validateLength minimum="10" maximum="400"/>
                     </b:inputTextarea>
                     <p:growl id="messages" showDetail="true" />
                     <h:outputText value="Adicionar localização" style="width: 100%;color: chocolate;font-size: 16px;margin: 40% 0 1% 1%"/>
-                    <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="15" type="HYBRID" style="width:100%;height:300px;margin:3% 0 5% 0"
+                    <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="15" type="HYBRID" style="width:100%;height:300px;margin:3% 0 7% 0"
                             model="#{registarSolicitacaoMB.mapa}" onPointClick="handlePointClick(event);" widgetVar="map">
                         <p:ajax event="markerDrag" listener="#{registarSolicitacaoMB.onMarkerDrag(event)}"/>
                         <!--p:ajax event="pointSelect" listener=""/-->

@@ -29,11 +29,12 @@ public class FiltroAutenticacao implements Filter {
         
        HttpSession sessao = ((HttpServletRequest)request).getSession();
       
-        if(sessao.getAttribute("usuario_nome") == null){ 
-            sessao.setAttribute("aviso", "falha na autenticação"); 
+        if(sessao.getAttribute("usuario_logado") == null){ 
+            //sessao.setAttribute("aviso", "falha na autenticação"); 
             ((HttpServletResponse) response).sendRedirect("../login.xhtml");
         }
         else
             chain.doFilter(request,response);
     }
+    
 }
