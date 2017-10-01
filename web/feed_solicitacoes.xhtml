@@ -2,7 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Feed de solicitações</title>
         <h:outputStylesheet library="css" name="registarSolicitacao.css" />
@@ -11,6 +13,14 @@
         <ui:include src="header.xhtml"/>
         <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
         <h2>Feed de solicitações...</h2>
+        <p:dataGrid id="noticias" var="noticia" value="" paginator="true" rows="20" emptyMessage="Não existem notícias.">
+            <f:facet name="header">Lista de Notícias</f:facet>
+            <p:panel header="Notícia">
+                <p:column>
+                    <p:graphicImage value="#{noticia.imagemMontada}" cache="false" /> <!-- objeto do tipo StreamedContent-->
+                </p:column>
+            </p:panel>
+        </p:dataGrid>
     </h:body>
 </html>
 

@@ -20,13 +20,11 @@
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
         <ui:include src="header.xhtml"/>
         <b:container id="container">
-            <b:form id="formularios" horizontal="true">
+            <b:form id="formularios" horizontal="true" enctype="multipart/form-data">
                 <b:container class="confirmacao" rendered="#{registarSolicitacaoMB.confirmacao}" style="width: 90%;margin-left: 4%">
-                    <h:outputText value="Requerente : #{registarSolicitacaoMB.requerente.nome}"/><br/>
-                    <h:outputText value="Descrição : #{registarSolicitacaoMB.protocolo.descricao}"/><br/>
-                    <b:container class="local_foto" style="width: 60%">
-                        Foto aqui
-                    </b:container>
+                    <h:outputText value="#{registarSolicitacaoMB.protocolo.descricao}" style="color: blue;text-align: center;margin-bottom: 1%;width: 100%"/><br/>
+                    <p:graphicImage value="#{registarSolicitacaoMB.image}" alt=" erro ao carregar imagem " cache="false"
+                                    style="width: 80%;height: 40%;margin: 3% 0 3% 10%;max-height: 350px"/>
                     <b:commandButton id="botao_confirmar" value="Confirmar" style="width: 70%;float: bottom;position: relative;height: 50px;margin: 4% 0 0 15%;background-color: blue;color: white" action="#{registarSolicitacaoMB.concluir()}"/>
                     <b:commandButton id="botao_cancelar" value="Cancelar" style="width: 70%;float: bottom;position: relative;height: 50px;margin: 3% 0 4% 15%;background-color: darkorange;color: white" action="#{registarSolicitacaoMB.cancelar()}"/>
                 </b:container>
@@ -34,18 +32,16 @@
                 <b:container class="form_servico" style="width: 90%;">
                     <h3 class="subtitulo">Descrição do servico</h3>
                     <h:outputText value="Adicionar foto" style="margin-top: 10px;color: chocolate;float: left;position: relative;font-size: 15px;margin-left: 3%"/>
-                    <h:form enctype="multipart/form-data">
-                        <p:growl id="messages3" showDetail="true" />
-                        <p:fileUpload value="#{registarSolicitacaoMB.file}" class="file_upload"
-                                      cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Anexar"
-                                      fileUploadListener="#{registarSolicitacaoMB.upload}"
-                                      invalidFileMessage="Somente arquivos .jpg, .png ou .gif"
-                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="true"
-                                      mode="advanced" skinSimple="true" update="imagem" required="true"
-                                      sizeLimit="1000000" invalidSizeMessage="Tamanho maximo da imagem : 1mb"/>
-                        <p:graphicImage id="imagem" value="#{registarSolicitacaoMB.image}" alt=" " cache="false"
-                                        style="width: 80%;height: 10%;margin: 1% 0 3% 10%;max-height: 350px"/>
-                    </h:form>
+                    <p:growl id="messages3" showDetail="true" />
+                    <p:fileUpload value="#{registarSolicitacaoMB.file}" class="file_upload"
+                                  cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Anexar"
+                                  fileUploadListener="#{registarSolicitacaoMB.upload}"
+                                  invalidFileMessage="Somente arquivos .jpg, .png ou .gif"
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="true"
+                                  mode="advanced" skinSimple="true" update="imagem" required="true"
+                                  sizeLimit="1000000" invalidSizeMessage="Tamanho maximo da imagem : 1mb"/>
+                    <p:graphicImage id="imagem" value="#{registarSolicitacaoMB.image}" alt=" " cache="false"
+                                    style="width: 80%;height: 10%;margin: 1% 0 3% 10%;max-height: 350px"/>
                     <b:inputTextarea class="input_descricao" label-style="text-align : left;margin-top: 10px;color: chocolate;min-width: 100px;margin-left: 4%" style="margin: auto;height: 180px;margin-bottom: 5%;width: 90%;margin-left: 5%"
                                      value="#{registarSolicitacaoMB.protocolo.descricao}" label="Descrição" tooltip="descrição do serviço" required="true" validatorMessage="A descrição é de preenchimento obrigatorio!">
                         <f:validateLength minimum="10" maximum="400"/>
@@ -70,22 +66,25 @@
                     </b:inputText>
                     <b:inputText label-style="text-align : right;color: chocolate;margin-top:1%" class="form_informacoes_input" label-small-screen="2" small-screen="9"   required="true"
                                  label="Celular" value="#{registarSolicitacaoMB.requerente.celular}" tooltip="celular" onkeypress="mascara(this, soNumeros)" validatorMessage="O campo celular deve ser preenchido corretamente!">
-                        <f:validateLength minimum="11" maximum="15" />                    
+                        <f:validateLength minimum="11" maximum="15" />
                     </b:inputText>
-                    <b:dateTimePicker label-style="text-align : right;color: chocolate;margin:1% 0 2% 0" class="form_informacoes_input" label-small-screen="2" small-screen="9" style="margin-bottom: 4rem"
+                    <b:dateTimePicker label-style="text-align : right;color: chocolate;margin:1% 0 2% 0" class="form_informacoes_input" label-small-screen="2" small-screen="9"
                                       onkeypress="mascaraData(this)" label="Data de nascimento" value="#{registarSolicitacaoMB.requerente.dataNasc}" tooltip="data de nascimento" 
                                       mode="toggle-icon" show-time="false" initialDate="10/10/1990" format="DD/MM/YYYY" required="true">
                     </b:dateTimePicker>
+                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.protocolo.anonimo}" label="Anonimo" required="true" 
+                                             label-style="text-align : right;color: chocolate;margin:0 0 2% 0"  
+                                             style="margin-bottom: 4rem" label-small-screen="2" small-screen="3"/>
                 </b:container>
-                <b:commandButton class="continuar" value="continuar" action="#{registarSolicitacaoMB.continuar()}" 
-                                 style="width: 70%;margin: 7% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px;padding-top: 10px;"/>
+                <h:commandButton class="continuar" value="continuar" action="#{registarSolicitacaoMB.continuar()}" actionListener="#{registarSolicitacaoMB.continuar()}"
+                                 style="width: 70%;margin: 7% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px;padding-top: 10px"/>
             </b:form>
         </b:container>
         <p:dialog widgetVar="dlg" showEffect="fade">
             <h:form prependId="false">
                 <h:panelGrid columns="2">
-                    <h:outputLabel for="title" value="Title:"/>
-                    <p:inputText id="title" value="#{registarSolicitacaoMB.localizacao.titulo}"/>
+                    <h:outputLabel for="title" value="Confirmação" style="text-align: center"/>
+                    <h:inputHidden id="title" value="#{registarSolicitacaoMB.localizacao.titulo}"/>
                     <f:facet name="footer">
                         <p:commandButton value="Continuar" actionListener="#{registarSolicitacaoMB.salvarLocalizacao()}" onclick="adicionarMarcador()"/>
                         <p:commandButton value="Cancel" onclick="return cancelar()"/>

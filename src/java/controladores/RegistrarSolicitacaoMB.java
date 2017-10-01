@@ -1,17 +1,22 @@
 package controladores;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import modelos.Imagem;
 import modelos.Localizacao;
-
 import modelos.Protocolo;
 import modelos.Requerente;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -30,10 +35,12 @@ public class RegistrarSolicitacaoMB implements Serializable {
     Requerente requerente;
     Protocolo protocolo;
     Localizacao localizacao;
+    Imagem imagem;
     
     DAO<Requerente> requerenteDAO;
     DAO<Protocolo> protocoloDAO;
     DAO<Localizacao> localizacaoDAO;
+    DAO<Imagem> imagemDAO;
     
     private MapModel mapa;
       
@@ -46,7 +53,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
 
     @PostConstruct
-    public void inicializar() {
+    public void inicializar(){
         requerente = new Requerente();
         protocolo = new Protocolo();
         localizacao = new Localizacao();
@@ -54,11 +61,11 @@ public class RegistrarSolicitacaoMB implements Serializable {
         requerenteDAO = new DAO<>("Projeto-ExtensaoPU");
         protocoloDAO = new DAO<>("Projeto-ExtensaoPU");
         localizacaoDAO = new DAO<>("Projeto-ExtensaoPU");
+        imagemDAO = new DAO<>("Projeto-ExtensaoPU");
 
         mapa = new DefaultMapModel();
         
         confirmacao = false;
-        image = null;
     }
 
     @PreDestroy
@@ -66,8 +73,9 @@ public class RegistrarSolicitacaoMB implements Serializable {
         requerenteDAO.close();
         protocoloDAO.close();
         localizacaoDAO.close();
+        imagemDAO.close();
     }
-
+    
     public Requerente getRequerente() {
         return requerente;
     }
@@ -113,11 +121,25 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
 
     public StreamedContent getImage() {
+        if(imagem != null){
+            InputStream is = new ByteArrayInputStream(imagem.getDados());
+            image = new DefaultStreamedContent(is);
+        }
+        else
+            image = null;
         return image;
     }
 
     public void setImage(StreamedContent image) {
         this.image = image;
+    }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
     }
       
     public void addMarker() {
@@ -125,6 +147,8 @@ public class RegistrarSolicitacaoMB implements Serializable {
         mapa.addOverlay(marker);
         marker.setDraggable(true);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador adicionado", "Lat:" + localizacao.getLatitude() + ", Lng:" + localizacao.getLongitude()));
+        getProtocolo().getLocalizacao().setLatitude(localizacao.getLatitude());
+        getProtocolo().getLocalizacao().setLongitude(localizacao.getLongitude());
     }
 
     public void onMarkerDrag(MarkerDragEvent event) {
@@ -135,14 +159,14 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
 
     public void salvarLocalizacao(){
-        localizacao.setTitulo("nada");
-        localizacaoDAO.insert(localizacao);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador salvo", "Lat:" + localizacao.getLatitude()+ ", Lng:" + localizacao.getLongitude()));
-        localizacao = new Localizacao();
+        //localizacao.setTitulo("nada");
+        //localizacaoDAO.insert(localizacao);
+        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador salvo", "Lat:" + localizacao.getLatitude()+ ", Lng:" + localizacao.getLongitude()));
+        //localizacao = new Localizacao();
     }
     
     public void continuar(){
-        this.confirmacao = true;        
+        this.confirmacao = true;
     }
     
     public void cancelar(){
@@ -150,29 +174,39 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
 
     public void concluir() {
-        
+        localizacao.setTitulo(protocolo.getDescricao());
+        localizacaoDAO.insert(localizacao);
+        imagemDAO.insert(imagem);
+        requerenteDAO.insert(requerente);
+        protocolo.setStatus('S'); // Solicitado
+        protocolo.setDataProtocolo(new Date(System.currentTimeMillis()));
+        protocolo.setRequerente(requerente);
+        protocolo.setLocalizacao(localizacao);
+        protocolo.setImagem(imagem);
     }
+    /*private String getDateTime() { 
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
+	Date date = new Date(); 
+	return dateFormat.format(date); 
+}*/
 
     public void upload(FileUploadEvent evt) throws IOException{
         file = evt.getFile();
 
         if (file != null){
+            imagem = new Imagem();
+            imagem.setDados(IOUtils.toByteArray(file.getInputstream()));
+            imagem.setNome(file.getFileName());
+
             image = new DefaultStreamedContent(file.getInputstream());
+      
+            //FacesMessage message = new FacesMessage("Upload realizado com sucesso", file.getFileName());
+            //FacesContext.getCurrentInstance().addMessage(null, message);
             //InputStream input = file.getInputstream();
             //String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
             //File saida = new File(path + "/resources/images/teste.png");
-            //OutputStream os = new FileOutputStream(saida);
-            //imagem = new Imagem();
-            //imagem.setDados(IOUtils.toByteArray(file.getInputstream()));
-            //imagem.setNome(file.getFileName());
-            //os.write(imagem.getDados());
-            //os.flush();
+            //OutputStream os = new FileOutputStream(saida); 
             //imagemDAO.insert(imagem);
-            FacesMessage message = new FacesMessage("Upload realizado com sucesso", file.getFileName());
-            FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
-    
 }
-
-
