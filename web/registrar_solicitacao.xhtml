@@ -22,7 +22,7 @@
         <b:container id="container">
             <b:form id="formularios" horizontal="true" enctype="multipart/form-data">
                 <b:container class="confirmacao" rendered="#{registarSolicitacaoMB.confirmacao}" style="width: 90%;margin-left: 4%">
-                    <h:outputText value="#{registarSolicitacaoMB.protocolo.descricao}" style="color: blue;text-align: center;margin-bottom: 1%;width: 100%"/><br/>
+                    <h:outputText value="#{registarSolicitacaoMB.solicitacao.descricao}" style="color: blue;text-align: center;margin-bottom: 1%;width: 100%"/><br/>
                     <p:graphicImage value="#{registarSolicitacaoMB.image}" alt=" erro ao carregar imagem " cache="false"
                                     style="width: 80%;height: 40%;margin: 3% 0 3% 10%;max-height: 350px"/>
                     <b:commandButton id="botao_confirmar" value="Confirmar" style="width: 70%;float: bottom;position: relative;height: 50px;margin: 4% 0 0 15%;background-color: blue;color: white" action="#{registarSolicitacaoMB.concluir()}"/>
@@ -43,7 +43,7 @@
                     <p:graphicImage id="imagem" value="#{registarSolicitacaoMB.image}" alt=" " cache="false"
                                     style="width: 80%;height: 10%;margin: 1% 0 3% 10%;max-height: 350px"/>
                     <b:inputTextarea class="input_descricao" label-style="text-align : left;margin-top: 10px;color: chocolate;min-width: 100px;margin-left: 4%" style="margin: auto;height: 180px;margin-bottom: 5%;width: 90%;margin-left: 5%"
-                                     value="#{registarSolicitacaoMB.protocolo.descricao}" label="Descrição" tooltip="descrição do serviço" required="true" validatorMessage="A descrição é de preenchimento obrigatorio!">
+                                     value="#{registarSolicitacaoMB.solicitacao.descricao}" label="Descrição" tooltip="descrição do serviço" required="true" validatorMessage="A descrição é de preenchimento obrigatorio!">
                         <f:validateLength minimum="10" maximum="400"/>
                     </b:inputTextarea>
                     <p:growl id="messages" showDetail="true" />
@@ -72,7 +72,7 @@
                                       onkeypress="mascaraData(this)" label="Data de nascimento" value="#{registarSolicitacaoMB.requerente.dataNasc}" tooltip="data de nascimento" 
                                       mode="toggle-icon" show-time="false" initialDate="10/10/1990" format="DD/MM/YYYY" required="true">
                     </b:dateTimePicker>
-                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.protocolo.anonimo}" label="Anônimo" 
+                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.solicitacao.anonimo}" label="Anônimo" 
                                              label-style="text-align : right;color: chocolate;margin:0 0 2% 0"  
                                              style="margin-bottom: 4rem" label-small-screen="2" small-screen="3"/>
                 </b:container>

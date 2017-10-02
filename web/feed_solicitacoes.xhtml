@@ -13,10 +13,10 @@
         <ui:include src="header.xhtml"/>
         <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
         <h:form style="width: 80%;margin: auto;background-color: rgba(0, 0, 0, 0.6)">
-            <p:repeat value="#{feedSolicitacoesMB.lista}" var="protocolo">
-                <p:outputLabel value="#{protocolo.descricao}" style="width: 100%;text-align: center;color: white"/>
-                <p:outputLabel value="Enviado por #{protocolo.requerente.nome}" style="width: 100%;color: white"/>
-                <p:graphicImage value="#{protocolo.imagem.getImage()}" alt=" erro ao carregar imagem " cache="false"
+            <p:repeat value="#{feedSolicitacoesMB.lista}" var="solicitacao">
+                <p:outputLabel value="#{solicitacao.descricao}" style="width: 100%;text-align: center;color: white"/>
+                <p:outputLabel value="Enviado por #{solicitacao.requerente.nome}" style="width: 100%;color: white"/>
+                <p:graphicImage value="#{solicitacao.imagem.getImage()}" alt=" erro ao carregar imagem " cache="false"
                                 style="width: 80%;height: 40%;margin: 3% 0 3% 10%;max-height: 350px"/>
                 <hr/>
             </p:repeat>
