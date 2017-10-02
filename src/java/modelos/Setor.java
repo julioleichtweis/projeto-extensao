@@ -29,7 +29,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "setor")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Setor.findAll", query = "SELECT s FROM Setor s")})
+    @NamedQuery(name = "Setor.findAll", query = "SELECT s FROM Setor s")
+    , @NamedQuery(name = "Setor.findById", query = "SELECT s FROM Setor s WHERE s.id = :id")
+    , @NamedQuery(name = "Setor.findBySigla", query = "SELECT s FROM Setor s WHERE s.sigla = :sigla")
+    , @NamedQuery(name = "Setor.findByNome", query = "SELECT s FROM Setor s WHERE s.nome = :nome")
+    , @NamedQuery(name = "Setor.findByResponsavel", query = "SELECT s FROM Setor s WHERE s.responsavel = :responsavel")
+    , @NamedQuery(name = "Setor.findByEmail", query = "SELECT s FROM Setor s WHERE s.email = :email")})
 public class Setor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,7 +57,7 @@ public class Setor implements Serializable {
     @Column(name = "email")
     private String email;
     @OneToMany(mappedBy = "setor")
-    private List<Protocolo> protocoloList;
+    private List<Solicitacao> solicitacaoList;
 
     public Setor() {
     }
@@ -102,12 +107,12 @@ public class Setor implements Serializable {
     }
 
     @XmlTransient
-    public List<Protocolo> getProtocoloList() {
-        return protocoloList;
+    public List<Solicitacao> getSolicitacaoList() {
+        return solicitacaoList;
     }
 
-    public void setProtocoloList(List<Protocolo> protocoloList) {
-        this.protocoloList = protocoloList;
+    public void setSolicitacaoList(List<Solicitacao> solicitacaoList) {
+        this.solicitacaoList = solicitacaoList;
     }
 
     @Override

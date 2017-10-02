@@ -1,0 +1,16 @@
+body{
+    padding-top: 6rem;
+    width: 100%;
+}
+.titulo{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin-bottom: 3rem;
+    color: black;
+    text-shadow: 2px 2px 0 gray;
+    font-size: 3rem;
+}
+.ui-repeat{
+    margin-top: 200px;
+}

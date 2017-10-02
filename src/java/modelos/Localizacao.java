@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package modelos;
 
 import java.io.Serializable;
@@ -16,11 +21,19 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author root
+ */
 @Entity
 @Table(name = "localizacao")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Localizacao.findAll", query = "SELECT l FROM Localizacao l")})
+    @NamedQuery(name = "Localizacao.findAll", query = "SELECT l FROM Localizacao l")
+    , @NamedQuery(name = "Localizacao.findById", query = "SELECT l FROM Localizacao l WHERE l.id = :id")
+    , @NamedQuery(name = "Localizacao.findByTitulo", query = "SELECT l FROM Localizacao l WHERE l.titulo = :titulo")
+    , @NamedQuery(name = "Localizacao.findByLatitude", query = "SELECT l FROM Localizacao l WHERE l.latitude = :latitude")
+    , @NamedQuery(name = "Localizacao.findByLongitude", query = "SELECT l FROM Localizacao l WHERE l.longitude = :longitude")})
 public class Localizacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,7 +42,7 @@ public class Localizacao implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 100)
+    @Size(max = 2147483647)
     @Column(name = "titulo")
     private String titulo;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -38,7 +51,7 @@ public class Localizacao implements Serializable {
     @Column(name = "longitude")
     private Double longitude;
     @OneToMany(mappedBy = "localizacao")
-    private List<Protocolo> protocoloList;
+    private List<Solicitacao> solicitacaoList;
 
     public Localizacao() {
     }
@@ -80,12 +93,12 @@ public class Localizacao implements Serializable {
     }
 
     @XmlTransient
-    public List<Protocolo> getProtocoloList() {
-        return protocoloList;
+    public List<Solicitacao> getSolicitacaoList() {
+        return solicitacaoList;
     }
 
-    public void setProtocoloList(List<Protocolo> protocoloList) {
-        this.protocoloList = protocoloList;
+    public void setSolicitacaoList(List<Solicitacao> solicitacaoList) {
+        this.solicitacaoList = solicitacaoList;
     }
 
     @Override

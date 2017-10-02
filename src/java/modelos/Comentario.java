@@ -6,7 +6,6 @@
 package modelos;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,7 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "comentario")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comentario.findAll", query = "SELECT c FROM Comentario c")})
+    @NamedQuery(name = "Comentario.findAll", query = "SELECT c FROM Comentario c")
+    , @NamedQuery(name = "Comentario.findById", query = "SELECT c FROM Comentario c WHERE c.id = :id")
+    , @NamedQuery(name = "Comentario.findByComentario", query = "SELECT c FROM Comentario c WHERE c.comentario = :comentario")})
 public class Comentario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,15 +39,12 @@ public class Comentario implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 500)
+    @Size(max = 2147483647)
     @Column(name = "comentario")
     private String comentario;
-    @Column(name = "data_comentario")
-    @Temporal(TemporalType.DATE)
-    private Date dataComentario;
-    @JoinColumn(name = "protocolo", referencedColumnName = "id")
+    @JoinColumn(name = "solicitacao", referencedColumnName = "id")
     @ManyToOne
-    private Protocolo protocolo;
+    private Solicitacao solicitacao;
 
     public Comentario() {
     }
@@ -73,20 +69,12 @@ public class Comentario implements Serializable {
         this.comentario = comentario;
     }
 
-    public Date getDataComentario() {
-        return dataComentario;
+    public Solicitacao getSolicitacao() {
+        return solicitacao;
     }
 
-    public void setDataComentario(Date dataComentario) {
-        this.dataComentario = dataComentario;
-    }
-
-    public Protocolo getProtocolo() {
-        return protocolo;
-    }
-
-    public void setProtocolo(Protocolo protocolo) {
-        this.protocolo = protocolo;
+    public void setSolicitacao(Solicitacao solicitacao) {
+        this.solicitacao = solicitacao;
     }
 
     @Override

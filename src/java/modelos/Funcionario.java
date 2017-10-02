@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package modelos;
 
 import java.io.Serializable;
@@ -15,13 +20,20 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+/**
+ *
+ * @author root
+ */
 @Entity
 @Table(name = "funcionario")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Funcionario.findAll", query = "SELECT f FROM Funcionario f"),
-    @NamedQuery(name = "Funcionario.findForLogin", query = "SELECT f FROM Funcionario f WHERE f.matricula = :matricula AND f.senha = :senha")
-})
+    @NamedQuery(name = "Funcionario.findAll", query = "SELECT f FROM Funcionario f")
+    , @NamedQuery(name = "Funcionario.findById", query = "SELECT f FROM Funcionario f WHERE f.id = :id")
+    , @NamedQuery(name = "Funcionario.findByNome", query = "SELECT f FROM Funcionario f WHERE f.nome = :nome")
+    , @NamedQuery(name = "Funcionario.findByMatricula", query = "SELECT f FROM Funcionario f WHERE f.matricula = :matricula")
+    , @NamedQuery(name = "Funcionario.findBySenha", query = "SELECT f FROM Funcionario f WHERE f.senha = :senha")
+    , @NamedQuery(name = "Funcionario.findByStatus", query = "SELECT f FROM Funcionario f WHERE f.status = :status")})
 public class Funcionario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +54,7 @@ public class Funcionario implements Serializable {
     @Column(name = "status")
     private Character status;
     @OneToMany(mappedBy = "funcionario")
-    private List<Protocolo> protocoloList;
+    private List<Solicitacao> solicitacaoList;
 
     public Funcionario() {
     }
@@ -92,12 +104,12 @@ public class Funcionario implements Serializable {
     }
 
     @XmlTransient
-    public List<Protocolo> getProtocoloList() {
-        return protocoloList;
+    public List<Solicitacao> getSolicitacaoList() {
+        return solicitacaoList;
     }
 
-    public void setProtocoloList(List<Protocolo> protocoloList) {
-        this.protocoloList = protocoloList;
+    public void setSolicitacaoList(List<Solicitacao> solicitacaoList) {
+        this.solicitacaoList = solicitacaoList;
     }
 
     @Override

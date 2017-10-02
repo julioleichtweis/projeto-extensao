@@ -31,15 +31,15 @@
                 <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
                 <b:container class="form_servico" style="width: 90%;">
                     <h3 class="subtitulo">Descrição do servico</h3>
-                    <h:outputText value="Adicionar foto" style="margin-top: 10px;color: chocolate;float: left;position: relative;font-size: 15px;margin-left: 3%"/>
+                    <h:outputText value="Adicionar foto" style="color: chocolate;float: left;position: relative;font-size: 15px;margin-left: 3%"/>
                     <p:growl id="messages3" showDetail="true" />
                     <p:fileUpload value="#{registarSolicitacaoMB.file}" class="file_upload"
-                                  cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Anexar"
+                                  cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Upload"
                                   fileUploadListener="#{registarSolicitacaoMB.upload}"
                                   invalidFileMessage="Somente arquivos .jpg, .png ou .gif"
                                   allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="true"
                                   mode="advanced" skinSimple="true" update="imagem" required="true"
-                                  sizeLimit="1000000" invalidSizeMessage="Tamanho maximo da imagem : 1mb"/>
+                                  sizeLimit="10000000" invalidSizeMessage="Tamanho maximo da imagem : 1mb"/>
                     <p:graphicImage id="imagem" value="#{registarSolicitacaoMB.image}" alt=" " cache="false"
                                     style="width: 80%;height: 10%;margin: 1% 0 3% 10%;max-height: 350px"/>
                     <b:inputTextarea class="input_descricao" label-style="text-align : left;margin-top: 10px;color: chocolate;min-width: 100px;margin-left: 4%" style="margin: auto;height: 180px;margin-bottom: 5%;width: 90%;margin-left: 5%"
@@ -72,12 +72,12 @@
                                       onkeypress="mascaraData(this)" label="Data de nascimento" value="#{registarSolicitacaoMB.requerente.dataNasc}" tooltip="data de nascimento" 
                                       mode="toggle-icon" show-time="false" initialDate="10/10/1990" format="DD/MM/YYYY" required="true">
                     </b:dateTimePicker>
-                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.protocolo.anonimo}" label="Anonimo" required="true" 
+                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.protocolo.anonimo}" label="Anônimo" 
                                              label-style="text-align : right;color: chocolate;margin:0 0 2% 0"  
                                              style="margin-bottom: 4rem" label-small-screen="2" small-screen="3"/>
                 </b:container>
                 <h:commandButton class="continuar" value="continuar" action="#{registarSolicitacaoMB.continuar()}" actionListener="#{registarSolicitacaoMB.continuar()}"
-                                 style="width: 70%;margin: 7% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px;padding-top: 10px"/>
+                                 style="width: 70%;margin: 7% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px"/>
             </b:form>
         </b:container>
         <p:dialog widgetVar="dlg" showEffect="fade">
@@ -86,7 +86,7 @@
                     <h:outputLabel for="title" value="Confirmação" style="text-align: center"/>
                     <h:inputHidden id="title" value="#{registarSolicitacaoMB.localizacao.titulo}"/>
                     <f:facet name="footer">
-                        <p:commandButton value="Continuar" actionListener="#{registarSolicitacaoMB.salvarLocalizacao()}" onclick="adicionarMarcador()"/>
+                        <p:commandButton value="Continuar" onclick="adicionarMarcador()"/>
                         <p:commandButton value="Cancel" onclick="return cancelar()"/>
                     </f:facet>
                 </h:panelGrid>

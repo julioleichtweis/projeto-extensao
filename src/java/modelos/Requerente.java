@@ -32,7 +32,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "requerente")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Requerente.findAll", query = "SELECT r FROM Requerente r")})
+    @NamedQuery(name = "Requerente.findAll", query = "SELECT r FROM Requerente r")
+    , @NamedQuery(name = "Requerente.findById", query = "SELECT r FROM Requerente r WHERE r.id = :id")
+    , @NamedQuery(name = "Requerente.findByNome", query = "SELECT r FROM Requerente r WHERE r.nome = :nome")
+    , @NamedQuery(name = "Requerente.findByEmail", query = "SELECT r FROM Requerente r WHERE r.email = :email")
+    , @NamedQuery(name = "Requerente.findByCelular", query = "SELECT r FROM Requerente r WHERE r.celular = :celular")
+    , @NamedQuery(name = "Requerente.findByDataNasc", query = "SELECT r FROM Requerente r WHERE r.dataNasc = :dataNasc")})
 public class Requerente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,7 +60,7 @@ public class Requerente implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dataNasc;
     @OneToMany(mappedBy = "requerente")
-    private List<Protocolo> protocoloList;
+    private List<Solicitacao> solicitacaoList;
 
     public Requerente() {
     }
@@ -105,12 +110,12 @@ public class Requerente implements Serializable {
     }
 
     @XmlTransient
-    public List<Protocolo> getProtocoloList() {
-        return protocoloList;
+    public List<Solicitacao> getSolicitacaoList() {
+        return solicitacaoList;
     }
 
-    public void setProtocoloList(List<Protocolo> protocoloList) {
-        this.protocoloList = protocoloList;
+    public void setSolicitacaoList(List<Solicitacao> solicitacaoList) {
+        this.solicitacaoList = solicitacaoList;
     }
 
     @Override

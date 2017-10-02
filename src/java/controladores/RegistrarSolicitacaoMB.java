@@ -14,7 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import modelos.Imagem;
 import modelos.Localizacao;
-import modelos.Protocolo;
+import modelos.Solicitacao;
 import modelos.Requerente;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -33,12 +33,12 @@ import persistencia.DAO;
 public class RegistrarSolicitacaoMB implements Serializable {
 
     Requerente requerente;
-    Protocolo protocolo;
+    Solicitacao solicitacao;
     Localizacao localizacao;
     Imagem imagem;
     
     DAO<Requerente> requerenteDAO;
-    DAO<Protocolo> protocoloDAO;
+    DAO<Solicitacao> solicitacaoDAO;
     DAO<Localizacao> localizacaoDAO;
     DAO<Imagem> imagemDAO;
     
@@ -55,11 +55,11 @@ public class RegistrarSolicitacaoMB implements Serializable {
     @PostConstruct
     public void inicializar(){
         requerente = new Requerente();
-        protocolo = new Protocolo();
+        solicitacao = new Solicitacao();
         localizacao = new Localizacao();
         
         requerenteDAO = new DAO<>("Projeto-ExtensaoPU");
-        protocoloDAO = new DAO<>("Projeto-ExtensaoPU");
+        solicitacaoDAO = new DAO<>("Projeto-ExtensaoPU");
         localizacaoDAO = new DAO<>("Projeto-ExtensaoPU");
         imagemDAO = new DAO<>("Projeto-ExtensaoPU");
 
@@ -71,7 +71,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
     @PreDestroy
     public void fechar() {
         requerenteDAO.close();
-        protocoloDAO.close();
+        solicitacaoDAO.close();
         localizacaoDAO.close();
         imagemDAO.close();
     }
@@ -84,12 +84,12 @@ public class RegistrarSolicitacaoMB implements Serializable {
         this.requerente = requerente;
     }
 
-    public Protocolo getProtocolo() {
-        return protocolo;
+    public Solicitacao getSolicitacao() {
+        return solicitacao;
     }
 
-    public void setProtocolo(Protocolo protocolo) {
-        this.protocolo = protocolo;
+    public void setSolicitacao(Solicitacao solicitacao) {
+        this.solicitacao = solicitacao;
     }
 
     public Localizacao getLocalizacao() {
@@ -147,8 +147,8 @@ public class RegistrarSolicitacaoMB implements Serializable {
         mapa.addOverlay(marker);
         marker.setDraggable(true);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador adicionado", "Lat:" + localizacao.getLatitude() + ", Lng:" + localizacao.getLongitude()));
-        getProtocolo().getLocalizacao().setLatitude(localizacao.getLatitude());
-        getProtocolo().getLocalizacao().setLongitude(localizacao.getLongitude());
+        getSolicitacao().getLocalizacao().setLatitude(localizacao.getLatitude());
+        getSolicitacao().getLocalizacao().setLongitude(localizacao.getLongitude());
     }
 
     public void onMarkerDrag(MarkerDragEvent event) {
@@ -156,13 +156,6 @@ public class RegistrarSolicitacaoMB implements Serializable {
         marker = event.getMarker();
           
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Dragged", "Lat:" + marker.getLatlng().getLat() + ", Lng:" + marker.getLatlng().getLng()));
-    }
-
-    public void salvarLocalizacao(){
-        //localizacao.setTitulo("nada");
-        //localizacaoDAO.insert(localizacao);
-        //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador salvo", "Lat:" + localizacao.getLatitude()+ ", Lng:" + localizacao.getLongitude()));
-        //localizacao = new Localizacao();
     }
     
     public void continuar(){
@@ -174,15 +167,20 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
 
     public void concluir() {
-        localizacao.setTitulo(protocolo.getDescricao());
+        localizacao.setTitulo(solicitacao.getDescricao());
         localizacaoDAO.insert(localizacao);
         imagemDAO.insert(imagem);
         requerenteDAO.insert(requerente);
-        protocolo.setStatus('S'); // Solicitado
-        protocolo.setDataProtocolo(new Date(System.currentTimeMillis()));
-        protocolo.setRequerente(requerente);
-        protocolo.setLocalizacao(localizacao);
-        protocolo.setImagem(imagem);
+        solicitacao.setStatus('S'); // Solicitado
+        solicitacao.setDataSolicitacao(new Date(System.currentTimeMillis()));
+        solicitacao.setRequerente(requerente);
+        solicitacao.setLocalizacao(localizacao);
+        solicitacao.setImagem(imagem);
+        solicitacaoDAO.insert(solicitacao); 
+        imagem = null;
+        localizacao = new Localizacao();
+        solicitacao = new Solicitacao();
+        confirmacao = false;
     }
     /*private String getDateTime() { 
 	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
@@ -199,14 +197,6 @@ public class RegistrarSolicitacaoMB implements Serializable {
             imagem.setNome(file.getFileName());
 
             image = new DefaultStreamedContent(file.getInputstream());
-      
-            //FacesMessage message = new FacesMessage("Upload realizado com sucesso", file.getFileName());
-            //FacesContext.getCurrentInstance().addMessage(null, message);
-            //InputStream input = file.getInputstream();
-            //String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
-            //File saida = new File(path + "/resources/images/teste.png");
-            //OutputStream os = new FileOutputStream(saida); 
-            //imagemDAO.insert(imagem);
         }
     }
 }

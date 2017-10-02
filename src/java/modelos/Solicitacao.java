@@ -7,6 +7,7 @@ package modelos;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,27 +18,30 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author root
  */
 @Entity
-@Table(name = "protocolo")
+@Table(name = "solicitacao")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Protocolo.findAll", query = "SELECT p FROM Protocolo p")
-    , @NamedQuery(name = "Protocolo.findById", query = "SELECT p FROM Protocolo p WHERE p.id = :id")
-    , @NamedQuery(name = "Protocolo.findByDataProtocolo", query = "SELECT p FROM Protocolo p WHERE p.dataProtocolo = :dataProtocolo")
-    , @NamedQuery(name = "Protocolo.findByDescricao", query = "SELECT p FROM Protocolo p WHERE p.descricao = :descricao")
-    , @NamedQuery(name = "Protocolo.findByStatus", query = "SELECT p FROM Protocolo p WHERE p.status = :status")
-    , @NamedQuery(name = "Protocolo.findByAnonimo", query = "SELECT p FROM Protocolo p WHERE p.anonimo = :anonimo")})
-public class Protocolo implements Serializable {
+    @NamedQuery(name = "Solicitacao.findAll", query = "SELECT s FROM Solicitacao s")
+    , @NamedQuery(name = "Solicitacao.findById", query = "SELECT s FROM Solicitacao s WHERE s.id = :id")
+    , @NamedQuery(name = "Solicitacao.findByDataSolicitacao", query = "SELECT s FROM Solicitacao s WHERE s.dataSolicitacao = :dataSolicitacao")
+    , @NamedQuery(name = "Solicitacao.findByDescricao", query = "SELECT s FROM Solicitacao s WHERE s.descricao = :descricao")
+    , @NamedQuery(name = "Solicitacao.findByStatus", query = "SELECT s FROM Solicitacao s WHERE s.status = :status")
+    , @NamedQuery(name = "Solicitacao.findByAnonimo", query = "SELECT s FROM Solicitacao s WHERE s.anonimo = :anonimo")
+    , @NamedQuery(name = "Solicitacao.findByCurtidas", query = "SELECT s FROM Solicitacao s WHERE s.curtidas = :curtidas")})
+public class Solicitacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,9 +49,9 @@ public class Protocolo implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "data_protocolo")
+    @Column(name = "data_solicitacao")
     @Temporal(TemporalType.DATE)
-    private Date dataProtocolo;
+    private Date dataSolicitacao;
     @Size(max = 2147483647)
     @Column(name = "descricao")
     private String descricao;
@@ -55,6 +59,8 @@ public class Protocolo implements Serializable {
     private Character status;
     @Column(name = "anonimo")
     private Boolean anonimo;
+    @Column(name = "curtidas")
+    private Integer curtidas;
     @JoinColumn(name = "funcionario", referencedColumnName = "id")
     @ManyToOne
     private Funcionario funcionario;
@@ -73,11 +79,13 @@ public class Protocolo implements Serializable {
     @JoinColumn(name = "setor", referencedColumnName = "id")
     @ManyToOne
     private Setor setor;
+    @OneToMany(mappedBy = "solicitacao")
+    private List<Comentario> comentarioList;
 
-    public Protocolo() {
+    public Solicitacao() {
     }
 
-    public Protocolo(Integer id) {
+    public Solicitacao(Integer id) {
         this.id = id;
     }
 
@@ -89,12 +97,12 @@ public class Protocolo implements Serializable {
         this.id = id;
     }
 
-    public Date getDataProtocolo() {
-        return dataProtocolo;
+    public Date getDataSolicitacao() {
+        return dataSolicitacao;
     }
 
-    public void setDataProtocolo(Date dataProtocolo) {
-        this.dataProtocolo = dataProtocolo;
+    public void setDataSolicitacao(Date dataSolicitacao) {
+        this.dataSolicitacao = dataSolicitacao;
     }
 
     public String getDescricao() {
@@ -119,6 +127,14 @@ public class Protocolo implements Serializable {
 
     public void setAnonimo(Boolean anonimo) {
         this.anonimo = anonimo;
+    }
+
+    public Integer getCurtidas() {
+        return curtidas;
+    }
+
+    public void setCurtidas(Integer curtidas) {
+        this.curtidas = curtidas;
     }
 
     public Funcionario getFuncionario() {
@@ -169,6 +185,15 @@ public class Protocolo implements Serializable {
         this.setor = setor;
     }
 
+    @XmlTransient
+    public List<Comentario> getComentarioList() {
+        return comentarioList;
+    }
+
+    public void setComentarioList(List<Comentario> comentarioList) {
+        this.comentarioList = comentarioList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -179,10 +204,10 @@ public class Protocolo implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Protocolo)) {
+        if (!(object instanceof Solicitacao)) {
             return false;
         }
-        Protocolo other = (Protocolo) object;
+        Solicitacao other = (Solicitacao) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -191,7 +216,7 @@ public class Protocolo implements Serializable {
 
     @Override
     public String toString() {
-        return "modelos.Protocolo[ id=" + id + " ]";
+        return "modelos.Solicitacao[ id=" + id + " ]";
     }
     
 }

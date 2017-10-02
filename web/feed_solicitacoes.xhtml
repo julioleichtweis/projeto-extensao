@@ -7,20 +7,20 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Feed de solicitações</title>
-        <h:outputStylesheet library="css" name="registarSolicitacao.css" />
+        <h:outputStylesheet library="css" name="feedSolicitacoes.css" />
     </h:head>
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
         <ui:include src="header.xhtml"/>
         <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
-        <h2>Feed de solicitações...</h2>
-        <p:dataGrid id="noticias" var="noticia" value="" paginator="true" rows="20" emptyMessage="Não existem notícias.">
-            <f:facet name="header">Lista de Notícias</f:facet>
-            <p:panel header="Notícia">
-                <p:column>
-                    <p:graphicImage value="#{noticia.imagemMontada}" cache="false" /> <!-- objeto do tipo StreamedContent-->
-                </p:column>
-            </p:panel>
-        </p:dataGrid>
+        <h:form style="width: 80%;margin: auto;background-color: rgba(0, 0, 0, 0.6)">
+            <p:repeat value="#{feedSolicitacoesMB.lista}" var="protocolo">
+                <p:outputLabel value="#{protocolo.descricao}" style="width: 100%;text-align: center;color: white"/>
+                <p:outputLabel value="Enviado por #{protocolo.requerente.nome}" style="width: 100%;color: white"/>
+                <p:graphicImage value="#{protocolo.imagem.getImage()}" alt=" erro ao carregar imagem " cache="false"
+                                style="width: 80%;height: 40%;margin: 3% 0 3% 10%;max-height: 350px"/>
+                <hr/>
+            </p:repeat>
+        </h:form>
     </h:body>
 </html>
 

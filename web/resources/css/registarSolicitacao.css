@@ -31,7 +31,7 @@ body{
     width: 90%;
 }
 .subtitulo{
-    margin: 4rem 0 4rem 0;
+    margin: 2rem 0 2rem 0;
     text-align: center;
     color: maroon;
 }
@@ -78,7 +78,7 @@ body{
     text-align: center;
     font-size: 18px;
     border-radius: 8px;
-    padding-top: 10px;
+
 }
 .confirmacao{
     height: 80%;

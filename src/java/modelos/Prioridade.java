@@ -28,7 +28,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "prioridade")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Prioridade.findAll", query = "SELECT p FROM Prioridade p")})
+    @NamedQuery(name = "Prioridade.findAll", query = "SELECT p FROM Prioridade p")
+    , @NamedQuery(name = "Prioridade.findById", query = "SELECT p FROM Prioridade p WHERE p.id = :id")
+    , @NamedQuery(name = "Prioridade.findByNivel", query = "SELECT p FROM Prioridade p WHERE p.nivel = :nivel")
+    , @NamedQuery(name = "Prioridade.findByDescricao", query = "SELECT p FROM Prioridade p WHERE p.descricao = :descricao")})
 public class Prioridade implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,7 +46,7 @@ public class Prioridade implements Serializable {
     @Column(name = "descricao")
     private String descricao;
     @OneToMany(mappedBy = "prioridade")
-    private List<Protocolo> protocoloList;
+    private List<Solicitacao> solicitacaoList;
 
     public Prioridade() {
     }
@@ -77,12 +80,12 @@ public class Prioridade implements Serializable {
     }
 
     @XmlTransient
-    public List<Protocolo> getProtocoloList() {
-        return protocoloList;
+    public List<Solicitacao> getSolicitacaoList() {
+        return solicitacaoList;
     }
 
-    public void setProtocoloList(List<Protocolo> protocoloList) {
-        this.protocoloList = protocoloList;
+    public void setSolicitacaoList(List<Solicitacao> solicitacaoList) {
+        this.solicitacaoList = solicitacaoList;
     }
 
     @Override
