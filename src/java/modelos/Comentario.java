@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package modelos;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,20 +13,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author root
- */
 @Entity
 @Table(name = "comentario")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Comentario.findAll", query = "SELECT c FROM Comentario c")
     , @NamedQuery(name = "Comentario.findById", query = "SELECT c FROM Comentario c WHERE c.id = :id")
-    , @NamedQuery(name = "Comentario.findByComentario", query = "SELECT c FROM Comentario c WHERE c.comentario = :comentario")})
+    , @NamedQuery(name = "Comentario.findByComentario", query = "SELECT c FROM Comentario c WHERE c.comentario = :comentario")
+    , @NamedQuery(name = "Comentario.findBySolicitacao", query = "SELECT c FROM Comentario c WHERE c.solicitacao = :solicitacao")
+    , @NamedQuery(name = "Comentario.findByDataComentario", query = "SELECT c FROM Comentario c WHERE c.dataComentario = :dataComentario")})
 public class Comentario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,6 +38,12 @@ public class Comentario implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "comentario")
     private String comentario;
+    @Column(name = "data_comentario")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataComentario;
+    @JoinColumn(name = "requerente", referencedColumnName = "id")
+    @ManyToOne
+    private Requerente requerente;
     @JoinColumn(name = "solicitacao", referencedColumnName = "id")
     @ManyToOne
     private Solicitacao solicitacao;
@@ -67,6 +69,22 @@ public class Comentario implements Serializable {
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
+    }
+
+    public Date getDataComentario() {
+        return dataComentario;
+    }
+
+    public void setDataComentario(Date dataComentario) {
+        this.dataComentario = dataComentario;
+    }
+
+    public Requerente getRequerente() {
+        return requerente;
+    }
+
+    public void setRequerente(Requerente requerente) {
+        this.requerente = requerente;
     }
 
     public Solicitacao getSolicitacao() {

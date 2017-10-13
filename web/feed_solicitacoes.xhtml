@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
@@ -12,15 +14,46 @@
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
         <ui:include src="header.xhtml"/>
         <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
-        <h:form style="width: 80%;margin: auto;background-color: rgba(0, 0, 0, 0.6)">
+        <h:form style="min-width: 350px;width: 80%;margin: auto;background-color: rgba(0, 0, 0, 0.6)">
             <p:repeat value="#{feedSolicitacoesMB.lista}" var="solicitacao">
-                <p:outputLabel value="#{solicitacao.descricao}" style="width: 100%;text-align: center;color: white"/>
-                <p:outputLabel value="Enviado por #{solicitacao.requerente.nome}" style="width: 100%;color: white"/>
-                <p:graphicImage value="#{solicitacao.imagem.getImage()}" alt=" erro ao carregar imagem " cache="false"
-                                style="width: 80%;height: 40%;margin: 3% 0 3% 10%;max-height: 350px"/>
+                <p:graphicImage value="#{solicitacao.requerente.foto}" style="height: 80px;position: relative;float: left;margin: 1% 0 0 1%"/>
+                <div style="position: relative;float: left;margin: 1% 0 0 2%;width: 70%;min-height: 80px">
+                    <p:outputLabel value="  #{solicitacao.requerente.nome}" style="color: white"/><br/>
+                    <p:outputLabel value="dia: -" style="color: gray;font-size: 12px"/>
+                    <p:outputLabel value="#{solicitacao.dataSolicitacao}" style="color: white">
+                        <f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR"/>
+                    </p:outputLabel>
+                    <p:outputLabel value=",  às: -" style="color: gray;font-size: 12px"/>
+                    <p:outputLabel value="#{solicitacao.dataSolicitacao}" style="color: white">
+                        <f:convertDateTime pattern="HH:mm" locale="pt_BR"/>
+                    </p:outputLabel>
+                </div><br/>
+                <p:outputLabel value="#{solicitacao.descricao}" style="width: 70%;margin-left:15%;text-align: center;color: white"/>
+                #{feedSolicitacoesMB.setImagem(solicitacao.imagem)}
+                <p:graphicImage value="#{feedSolicitacoesMB.image}" alt=" erro ao carregar imagem " cache="false"
+                                style="width: 50%;height: 300px;margin: 3% 0 0 25%;min-width: 200px"/>
+                <div style="width: 80%;min-width: 350px;margin: auto">
+                    <h4 style="text-align: center;color: blue">Comentarios</h4>
+                    <p:panelGrid id="coments">
+                        <p:repeat id="repeat" value="#{feedSolicitacoesMB.getListaComentarios(solicitacao)}" var="coment">
+                            <div style="width: 80%;margin: 0 0 0 10%;border: 1px gray groove;;color: white">
+                                <p:outputLabel value="#{coment.dataHorario}" style="font-size: 10px;color: gray">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="pt_BR"/>
+                                </p:outputLabel>
+                                <br/>
+                                <p:outputLabel value="#{coment.comentario}" style="color: #d3cccc"/>
+                            </div>
+                        </p:repeat>
+                    </p:panelGrid>
+                    <p:inputText id="comentario" value="#{feedSolicitacoesMB.comentario.comentario}" style="width: 80%;margin: 1% 0 1% 10%" placeholder="adicionar comentario">
+                        <p:ajax event="keyup" update="comentario"/>
+                    </p:inputText>
+                    <p:commandLink value="ok" style="border: 2px solid blue;background-color: blue">
+                        <p:ajax event="click" listener="#{feedSolicitacoesMB.registrarComentario(solicitacao)}" update="coments,comentario"/>
+                    </p:commandLink>
+                </div>
                 <hr/>
             </p:repeat>
         </h:form>
     </h:body>
 </html>
-

@@ -1,10 +1,10 @@
 package persistencia;
 
-import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import modelos.Solicitacao;
 
 public class DAO<T>{
 
@@ -55,6 +55,18 @@ public class DAO<T>{
         return query.getResultList();
     }
         
+    public List<T> getByNamedQuery(Class<T> c,String sql,String parametro1,Solicitacao valor1){
+        Query query = this.em.createNamedQuery(sql,c);
+        query.setParameter(parametro1,valor1);
+        return query.getResultList();
+    }
+
+    public List<T> getByNamedQuery(Class<T> c,String sql,String parametro1,String valor1){
+        Query query = this.em.createNamedQuery(sql,c);
+        query.setParameter(parametro1,valor1);
+        return query.getResultList();
+    }
+
     public void close(){
         this.em.close();
     }

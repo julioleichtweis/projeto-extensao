@@ -9,19 +9,9 @@
         <h:outputStylesheet library="css" name="registarSolicitacao.css" />
     </h:head>
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
-        <h1 class="titulo">LOGIN  -  Projeto de extensão</h1>
-        <b:form class="login">
-            <b:inputText required="true" style="width: 60%;margin: auto;margin-top: 5%" label-style="width:100%;text-align: center;margin: 4% 0 3% 0;color: white"
-                         value="#{loginMB.funcionario.matricula}" placeholder="Matrícula" 
-                         tooltip="matrícula" validatorMessage="Matrícula inválida!">
-                <f:validateLength minimum="5" />
-            </b:inputText>
-            <b:inputText required="true" style="width: 60%;margin: auto" label-style="width:100%;text-align: center;margin: 4% 0 3% 0;color: white"
-                         value="#{loginMB.funcionario.senha}" placeholder="Senha" 
-                         tooltip="senha" validatorMessage="Senha inválida!">
-                <f:validateLength minimum="5" />
-            </b:inputText>
-            <b:commandButton value="login" action="#{loginMB.autenticarLogin()}" style="width: 40%;margin: 4% 0 4% 30%;background-color: blue;color: white;"/>
+        <h1 class="titulo">Ajude a trasformar Bagé em uma cidade melhor</h1>
+        <b:form class="login" style="min-height: 40rem">
+            <b:commandButton value="Login com facebook" action="#{loginMB.conectarFacebook()}" style="width: 80%;margin: 18rem 0 4% 10%;background-color: blue;color: white;"/>
         </b:form>
     </h:body>
 </html>

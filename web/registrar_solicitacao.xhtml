@@ -19,6 +19,7 @@
     </h:head>
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
         <ui:include src="header.xhtml"/>
+        <h:outputText value="#{registarSolicitacaoMB.usuario}" style="font-size: 40px;margin: 100px 0 0 0"/>
         <b:container id="container">
             <b:form id="formularios" horizontal="true" enctype="multipart/form-data">
                 <b:container class="confirmacao" rendered="#{registarSolicitacaoMB.confirmacao}" style="width: 90%;margin-left: 4%">
@@ -56,22 +57,6 @@
                 </b:container>
                 <b:container class="form_informacoes_pessoais" style="width: 90%">
                     <h3 class="subtitulo">Minhas informações</h3>
-                    <b:inputText label-style="text-align : right;color: chocolate;margin-top:1%" class="form_informacoes_input" label-small-screen="2" small-screen="9" required="true" 
-                                 label="Email" value="#{registarSolicitacaoMB.requerente.email}" tooltip="email" validatorMessage="O campo email dever ser inserido corretamente!">
-                        <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-                    </b:inputText>
-                    <b:inputText label-style="text-align : right;color: chocolate;margin-top:1%" class="form_informacoes_input" label-small-screen="2" small-screen="9" required="true"
-                                 label="Nome" value="#{registarSolicitacaoMB.requerente.nome}" tooltip="nome" onkeypress="mascara(this, soLetras)" validatorMessage="O campo nome deve ser preenchido!">
-                        <f:validateLength minimum="5" maximum="100" />
-                    </b:inputText>
-                    <b:inputText label-style="text-align : right;color: chocolate;margin-top:1%" class="form_informacoes_input" label-small-screen="2" small-screen="9"   required="true"
-                                 label="Celular" value="#{registarSolicitacaoMB.requerente.celular}" tooltip="celular" onkeypress="mascara(this, soNumeros)" validatorMessage="O campo celular deve ser preenchido corretamente!">
-                        <f:validateLength minimum="11" maximum="15" />
-                    </b:inputText>
-                    <b:dateTimePicker label-style="text-align : right;color: chocolate;margin:1% 0 2% 0" class="form_informacoes_input" label-small-screen="2" small-screen="9"
-                                      onkeypress="mascaraData(this)" label="Data de nascimento" value="#{registarSolicitacaoMB.requerente.dataNasc}" tooltip="data de nascimento" 
-                                      mode="toggle-icon" show-time="false" initialDate="10/10/1990" format="DD/MM/YYYY" required="true">
-                    </b:dateTimePicker>
                     <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.solicitacao.anonimo}" label="Anônimo" 
                                              label-style="text-align : right;color: chocolate;margin:0 0 2% 0"  
                                              style="margin-bottom: 4rem" label-small-screen="2" small-screen="3"/>

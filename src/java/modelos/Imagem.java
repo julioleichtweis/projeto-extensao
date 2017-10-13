@@ -35,6 +35,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Imagem.findByNome", query = "SELECT i FROM Imagem i WHERE i.nome = :nome")})
 public class Imagem implements Serializable {
 
+    @Lob
+    @Column(name = "dados")
+    private byte[] dados;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +48,6 @@ public class Imagem implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "nome")
     private String nome;
-    @Lob
-    @Column(name = "dados")
-    private byte[] dados;
     @OneToMany(mappedBy = "imagem")
     private List<Solicitacao> solicitacaoList;
 
@@ -73,13 +74,6 @@ public class Imagem implements Serializable {
         this.nome = nome;
     }
 
-    public byte[] getDados() {
-        return dados;
-    }
-
-    public void setDados(byte[] dados) {
-        this.dados = dados;
-    }
 
     @XmlTransient
     public List<Solicitacao> getSolicitacaoList() {
@@ -113,6 +107,14 @@ public class Imagem implements Serializable {
     @Override
     public String toString() {
         return "modelos.Imagem[ id=" + id + " ]";
+    }
+
+    public byte[] getDados() {
+        return dados;
+    }
+
+    public void setDados(byte[] dados) {
+        this.dados = dados;
     }
     
 }

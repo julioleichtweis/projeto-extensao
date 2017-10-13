@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Solicitacao.findByDescricao", query = "SELECT s FROM Solicitacao s WHERE s.descricao = :descricao")
     , @NamedQuery(name = "Solicitacao.findByStatus", query = "SELECT s FROM Solicitacao s WHERE s.status = :status")
     , @NamedQuery(name = "Solicitacao.findByAnonimo", query = "SELECT s FROM Solicitacao s WHERE s.anonimo = :anonimo")
-    , @NamedQuery(name = "Solicitacao.findByCurtidas", query = "SELECT s FROM Solicitacao s WHERE s.curtidas = :curtidas")})
+    , @NamedQuery(name = "Solicitacao.findByCurtidas", query = "SELECT s FROM Solicitacao s WHERE s.curtidas = :curtidas")
+    , @NamedQuery(name = "Solicitacao.findByRequerente", query = "SELECT s FROM Solicitacao s WHERE s.requerente = :requerente")})
 public class Solicitacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,7 +51,7 @@ public class Solicitacao implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "data_solicitacao")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date dataSolicitacao;
     @Size(max = 2147483647)
     @Column(name = "descricao")
@@ -61,6 +62,9 @@ public class Solicitacao implements Serializable {
     private Boolean anonimo;
     @Column(name = "curtidas")
     private Integer curtidas;
+    @ManyToOne
+    @JoinColumn(name = "requerente", referencedColumnName = "id")
+    private Requerente requerente;
     @JoinColumn(name = "funcionario", referencedColumnName = "id")
     @ManyToOne
     private Funcionario funcionario;
@@ -73,9 +77,6 @@ public class Solicitacao implements Serializable {
     @JoinColumn(name = "prioridade", referencedColumnName = "id")
     @ManyToOne
     private Prioridade prioridade;
-    @JoinColumn(name = "requerente", referencedColumnName = "id")
-    @ManyToOne
-    private Requerente requerente;
     @JoinColumn(name = "setor", referencedColumnName = "id")
     @ManyToOne
     private Setor setor;
@@ -137,6 +138,14 @@ public class Solicitacao implements Serializable {
         this.curtidas = curtidas;
     }
 
+    public Requerente getRequerente() {
+        return requerente;
+    }
+
+    public void setRequerente(Requerente requerente) {
+        this.requerente = requerente;
+    }
+
     public Funcionario getFuncionario() {
         return funcionario;
     }
@@ -167,14 +176,6 @@ public class Solicitacao implements Serializable {
 
     public void setPrioridade(Prioridade prioridade) {
         this.prioridade = prioridade;
-    }
-
-    public Requerente getRequerente() {
-        return requerente;
-    }
-
-    public void setRequerente(Requerente requerente) {
-        this.requerente = requerente;
     }
 
     public Setor getSetor() {

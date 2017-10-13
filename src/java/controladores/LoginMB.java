@@ -1,56 +1,74 @@
 package controladores;
 
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import modelos.Funcionario;
-import persistencia.DAO;
+import java.util.Date;
+import java.util.Map;
+import java.util.Properties;
+import javax.inject.Named;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import org.brickred.socialauth.AuthProvider;
+import org.brickred.socialauth.Profile;
+import org.brickred.socialauth.SocialAuthConfig;
+import org.brickred.socialauth.SocialAuthManager;
+import org.brickred.socialauth.util.BirthDate;
+import org.brickred.socialauth.util.SocialAuthUtil;
 import util.Sessao;
 
 @Named(value = "loginMB")
 @SessionScoped
-public class LoginMB implements Serializable {
+public class LoginMB implements Serializable{
 
-    Funcionario funcionario;
-    DAO<Funcionario> funcionarioDAO;
+    private SocialAuthManager manager;
+    private Profile profile;
     
+    private final String mainURL = "http://192.168.0.40:31812/Projeto_Extensao/faces/registrar_solicitacao.xhtml";
+    private final String redirectURL = "http://192.168.0.40:31812/Projeto_Extensao/faces/redirect_home.xhtml";
+    private final String provider = "facebook";
+        
     public LoginMB() {
     }
 
-    @PostConstruct
-    public void inicializar() {
-        funcionario = new Funcionario();
-        funcionarioDAO = new DAO<>("Projeto-ExtensaoPU");
-    }
-
-    @PreDestroy
-    public void fechar() {
-
-    }
-
-    public Funcionario getFuncionario() {
-        return funcionario;
-    }
-
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
-    }
-
-    public String autenticarLogin(){
-        List funcionarios = new ArrayList<>();
-        funcionarios = funcionarioDAO.getByNamedQuery(Funcionario.class, "Funcionario.findForLogin" , "matricula",funcionario.getMatricula(),"senha", funcionario.getSenha());
-        if(funcionarios.isEmpty()){
-            return "login";
+    public void conectarFacebook(){
+        Properties props = System.getProperties();
+        props.put("graph.facebook.com.consumer_key","904034986439799");
+        props.put("graph.facebook.com.consumer_secret","66870b577faab3be991a77534761a367");
+        props.put("graph.facebook.com.custom_permissions","public_profile,email");
+        
+        SocialAuthConfig conf = SocialAuthConfig.getDefault();
+        try{
+            conf.load(props);
+            manager = new SocialAuthManager();
+            manager.setSocialAuthConfig(conf);
+            String URLretorno = manager.getAuthenticationUrl(provider, redirectURL);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(URLretorno);
         }
-        funcionario = funcionarioDAO.get(Funcionario.class, Integer.parseInt(funcionario.getMatricula()));
-        Sessao.putObjectSession("usuario", funcionario);
-        return "administracao";
+        catch(Exception e){
+            e.getStackTrace();
+        }
+    }
+    
+    public void getPerfil() throws Exception{
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        HttpServletRequest request = (HttpServletRequest) ec.getRequest();
+        Map <String , String> parametros = SocialAuthUtil.getRequestParametersMap(request);
+        
+        if(manager != null){
+            AuthProvider aut = manager.connect(parametros);
+            this.setProfile(aut.getUserProfile());
+            Sessao.putObjectSession("perfil", getProfile());
+        }
+        FacesContext.getCurrentInstance().getExternalContext().redirect(mainURL);
     }
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile; 
+    }
 }
-
-

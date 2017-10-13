@@ -4,12 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import modelos.Imagem;
@@ -17,6 +18,7 @@ import modelos.Localizacao;
 import modelos.Solicitacao;
 import modelos.Requerente;
 import org.apache.commons.io.IOUtils;
+import org.brickred.socialauth.Profile;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -27,6 +29,7 @@ import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 import persistencia.DAO;
+import util.Sessao;
 
 @Named(value = "registarSolicitacaoMB")
 @SessionScoped
@@ -49,6 +52,9 @@ public class RegistrarSolicitacaoMB implements Serializable {
 
     private boolean confirmacao;
 
+    private String usuario;
+    private Profile perfil;
+    
     public RegistrarSolicitacaoMB(){
     }
 
@@ -66,6 +72,8 @@ public class RegistrarSolicitacaoMB implements Serializable {
         mapa = new DefaultMapModel();
         
         confirmacao = false;
+        
+        carregarRequerente();
     }
 
     @PreDestroy
@@ -74,6 +82,22 @@ public class RegistrarSolicitacaoMB implements Serializable {
         solicitacaoDAO.close();
         localizacaoDAO.close();
         imagemDAO.close();
+    }
+
+    public Profile getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Profile perfil) {
+        this.perfil = perfil;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
     
     public Requerente getRequerente() {
@@ -119,14 +143,15 @@ public class RegistrarSolicitacaoMB implements Serializable {
     public void setConfirmacao(boolean confirmacao) {
         this.confirmacao = confirmacao;
     }
-
+    
     public StreamedContent getImage() {
         if(imagem != null){
             InputStream is = new ByteArrayInputStream(imagem.getDados());
             image = new DefaultStreamedContent(is);
         }
-        else
+        else{
             image = null;
+        }
         return image;
     }
 
@@ -147,8 +172,8 @@ public class RegistrarSolicitacaoMB implements Serializable {
         mapa.addOverlay(marker);
         marker.setDraggable(true);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador adicionado", "Lat:" + localizacao.getLatitude() + ", Lng:" + localizacao.getLongitude()));
-        getSolicitacao().getLocalizacao().setLatitude(localizacao.getLatitude());
-        getSolicitacao().getLocalizacao().setLongitude(localizacao.getLongitude());
+        //getSolicitacao().getLocalizacao().setLatitude(localizacao.getLatitude());
+        //getSolicitacao().getLocalizacao().setLongitude(localizacao.getLongitude());
     }
 
     public void onMarkerDrag(MarkerDragEvent event) {
@@ -170,7 +195,6 @@ public class RegistrarSolicitacaoMB implements Serializable {
         localizacao.setTitulo(solicitacao.getDescricao());
         localizacaoDAO.insert(localizacao);
         imagemDAO.insert(imagem);
-        requerenteDAO.insert(requerente);
         solicitacao.setStatus('S'); // Solicitado
         solicitacao.setDataSolicitacao(new Date(System.currentTimeMillis()));
         solicitacao.setRequerente(requerente);
@@ -199,4 +223,34 @@ public class RegistrarSolicitacaoMB implements Serializable {
             image = new DefaultStreamedContent(file.getInputstream());
         }
     }
+
+    public void carregarRequerente(){
+        
+        perfil = (Profile) Sessao.getObjectSession("perfil");
+        if(perfil != null){
+                        
+            requerente.setId(perfil.getValidatedId());
+
+            if(perfil.getFullName() != null)
+                requerente.setNome(perfil.getFullName());
+            if(perfil.getEmail() != null)
+                requerente.setEmail(perfil.getEmail());
+            if(perfil.getDob() != null)
+                requerente.setDataNasc(perfil.getDob().toString());
+            if(perfil.getProfileImageURL() != null)
+                requerente.setFoto(perfil.getProfileImageURL());
+            if(perfil.getGender() != null)
+                requerente.setSexo(perfil.getGender());
+                        
+            List<Requerente> lista_requerente = new ArrayList<>();
+            
+            lista_requerente = requerenteDAO.getByNamedQuery(Requerente.class,"Requerente.findById","id", perfil.getValidatedId());
+            
+            if(!lista_requerente.isEmpty())
+                return;
+
+            requerenteDAO.insert(requerente);
+        }
+    }
+
 }
