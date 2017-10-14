@@ -15,6 +15,11 @@ function handlePointClick(event) {
 
         PF('dlg').show();
     }
+    else{
+        currentMarker.setMap(null);
+        currentMarker = null;
+        handlePointClick(event);
+    }
 }
 
 function adicionarMarcador() {
@@ -22,7 +27,6 @@ function adicionarMarcador() {
     currentMarker.setTitle(title.value);
     title.value = "";
 
-    currentMarker = null;
     PF('dlg').hide();
 }
 

@@ -19,7 +19,6 @@
     </h:head>
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
         <ui:include src="header.xhtml"/>
-        <h:outputText value="#{registarSolicitacaoMB.usuario}" style="font-size: 40px;margin: 100px 0 0 0"/>
         <b:container id="container">
             <b:form id="formularios" horizontal="true" enctype="multipart/form-data">
                 <b:container class="confirmacao" rendered="#{registarSolicitacaoMB.confirmacao}" style="width: 90%;margin-left: 4%">
@@ -49,20 +48,17 @@
                     </b:inputTextarea>
                     <p:growl id="messages" showDetail="true" />
                     <h:outputText value="Adicionar localização" style="width: 100%;color: chocolate;font-size: 16px;margin: 40% 0 1% 1%"/>
-                    <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="15" type="HYBRID" style="width:100%;height:300px;margin:3% 0 7% 0"
+                    <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="15" type="HYBRID" style="width:100%;height:300px;margin:3% 0 6% 0"
                             model="#{registarSolicitacaoMB.mapa}" onPointClick="handlePointClick(event);" widgetVar="map">
                         <p:ajax event="markerDrag" listener="#{registarSolicitacaoMB.onMarkerDrag(event)}"/>
                         <!--p:ajax event="pointSelect" listener=""/-->
                     </p:gmap>
-                </b:container>
-                <b:container class="form_informacoes_pessoais" style="width: 90%">
-                    <h3 class="subtitulo">Minhas informações</h3>
-                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.solicitacao.anonimo}" label="Anônimo" 
-                                             label-style="text-align : right;color: chocolate;margin:0 0 2% 0"  
-                                             style="margin-bottom: 4rem" label-small-screen="2" small-screen="3"/>
+                    <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.solicitacao.anonimo}" label="Anônimo..?" 
+                                             label-style="color: chocolate;margin: 0 0 7% 1%;text-align: left"  
+                                             label-small-screen="1" small-screen="2"/>
                 </b:container>
                 <h:commandButton class="continuar" value="continuar" action="#{registarSolicitacaoMB.continuar()}" actionListener="#{registarSolicitacaoMB.continuar()}"
-                                 style="width: 70%;margin: 7% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px"/>
+                                 style="width: 70%;margin: 5% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px"/>
             </b:form>
         </b:container>
         <p:dialog widgetVar="dlg" showEffect="fade">
@@ -77,6 +73,18 @@
                 </h:panelGrid>
                 <h:inputHidden id="lat" value="#{registarSolicitacaoMB.localizacao.latitude}"/>
                 <h:inputHidden id="lng" value="#{registarSolicitacaoMB.localizacao.longitude}"/>
+            </h:form>
+        </p:dialog>
+        <p:dialog widgetVar="dlg2" showEffect="fade">
+            <h:form prependId="false" style="width: 60%;height: 50%;">
+                <h:outputLabel for="title" value="SUCESSO AO ENVIAR A SOLICITAÇÃO" style="text-align: center"/>
+                <f:facet name="content">
+                    <p:outputLabel value="Sua solicitação foi enviada com sucesso, assim que possível iremos analiza-la e encaminha-la para
+                                   o setor responsável, e manteremos o contato enviando para o seu email atualizações sobre a sua requisição."/>
+                </f:facet>
+                <f:facet name="footer">
+                    <p:commandButton value="Continuar" onclick="adicionarMarcador()" style="width: 80%;margin-left: 10%;border: 2px solid white;color: white;background-color: blue"/>
+                </f:facet>
             </h:form>
         </p:dialog>
     </h:body>

@@ -35,15 +35,15 @@ import util.Sessao;
 @SessionScoped
 public class RegistrarSolicitacaoMB implements Serializable {
 
-    Requerente requerente;
-    Solicitacao solicitacao;
-    Localizacao localizacao;
-    Imagem imagem;
+    private Requerente requerente;
+    private Solicitacao solicitacao;
+    private Localizacao localizacao;
+    private Imagem imagem;
     
-    DAO<Requerente> requerenteDAO;
-    DAO<Solicitacao> solicitacaoDAO;
-    DAO<Localizacao> localizacaoDAO;
-    DAO<Imagem> imagemDAO;
+    private DAO<Requerente> requerenteDAO;
+    private DAO<Solicitacao> solicitacaoDAO;
+    private DAO<Localizacao> localizacaoDAO;
+    private DAO<Imagem> imagemDAO;
     
     private MapModel mapa;
       
@@ -52,9 +52,6 @@ public class RegistrarSolicitacaoMB implements Serializable {
 
     private boolean confirmacao;
 
-    private String usuario;
-    private Profile perfil;
-    
     public RegistrarSolicitacaoMB(){
     }
 
@@ -63,6 +60,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
         requerente = new Requerente();
         solicitacao = new Solicitacao();
         localizacao = new Localizacao();
+        imagem = null;
         
         requerenteDAO = new DAO<>("Projeto-ExtensaoPU");
         solicitacaoDAO = new DAO<>("Projeto-ExtensaoPU");
@@ -84,22 +82,6 @@ public class RegistrarSolicitacaoMB implements Serializable {
         imagemDAO.close();
     }
 
-    public Profile getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Profile perfil) {
-        this.perfil = perfil;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-    
     public Requerente getRequerente() {
         return requerente;
     }
@@ -172,8 +154,6 @@ public class RegistrarSolicitacaoMB implements Serializable {
         mapa.addOverlay(marker);
         marker.setDraggable(true);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marcador adicionado", "Lat:" + localizacao.getLatitude() + ", Lng:" + localizacao.getLongitude()));
-        //getSolicitacao().getLocalizacao().setLatitude(localizacao.getLatitude());
-        //getSolicitacao().getLocalizacao().setLongitude(localizacao.getLongitude());
     }
 
     public void onMarkerDrag(MarkerDragEvent event) {
@@ -184,7 +164,12 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
     
     public void continuar(){
-        this.confirmacao = true;
+        if(imagem != null && localizacao.getLatitude() != null)
+            this.confirmacao = true;
+        if(imagem == null)
+            FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage("Faça o upload da imagem para continuar"));
+        if(localizacao.getLatitude() == null)
+            FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage("Indique a localização no mapa"));
     }
     
     public void cancelar(){
@@ -205,12 +190,8 @@ public class RegistrarSolicitacaoMB implements Serializable {
         localizacao = new Localizacao();
         solicitacao = new Solicitacao();
         confirmacao = false;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Pronto", "Solicitação enviada com sucesso"));
     }
-    /*private String getDateTime() { 
-	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"); 
-	Date date = new Date(); 
-	return dateFormat.format(date); 
-}*/
 
     public void upload(FileUploadEvent evt) throws IOException{
         file = evt.getFile();
@@ -226,7 +207,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
 
     public void carregarRequerente(){
         
-        perfil = (Profile) Sessao.getObjectSession("perfil");
+        Profile perfil = (Profile) Sessao.getObjectSession("perfil");
         if(perfil != null){
                         
             requerente.setId(perfil.getValidatedId());

@@ -1,10 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package modelos;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -21,11 +18,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
-/**
- *
- * @author root
- */
 @Entity
 @Table(name = "imagem")
 @XmlRootElement
@@ -116,5 +111,13 @@ public class Imagem implements Serializable {
     public void setDados(byte[] dados) {
         this.dados = dados;
     }
-    
+
+    public StreamedContent getImage(){
+
+        StreamedContent image;
+        InputStream is = new ByteArrayInputStream(this.getDados());
+        image = new DefaultStreamedContent(is);
+        System.out.println("to aqui ta tentado carregar a imagem "+this.getNome());
+        return image;
+    }
 }

@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -8,10 +9,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import modelos.Comentario;
 import modelos.Imagem;
 import modelos.Requerente;
@@ -23,8 +26,8 @@ import persistencia.DAO;
 import util.Sessao;
 
 @Named(value = "feedSolicitacoesMB")
-@SessionScoped 
-public class FeedSolicitacoesMB implements Serializable {
+@SessionScoped
+public class FeedSolicitacoesMB implements Serializable{
 
     Solicitacao solicitacao;
     Imagem imagem;
@@ -34,13 +37,17 @@ public class FeedSolicitacoesMB implements Serializable {
     DAO<Comentario> comentarioDAO;
     List<Solicitacao> lista;
     List<Comentario> lista_comentarios;
+    List<StreamedContent> lista_fotos;
     
     DAO<Imagem> imagemDAO;
-
+   
     StreamedContent image;
     
     boolean novo_comentario;
+    Profile perfil;
 
+    int x = 0;
+    
     public FeedSolicitacoesMB() {
     }
     
@@ -49,13 +56,15 @@ public class FeedSolicitacoesMB implements Serializable {
         solicitacao = new Solicitacao();
         comentario = new Comentario();
         imagem = new Imagem();
+        requerente = new Requerente();
         solicitacaoDAO = new DAO<>("Projeto-ExtensaoPU");
         comentarioDAO = new DAO<>("Projeto-ExtensaoPU");
         lista = new ArrayList<>();
         lista_comentarios = new ArrayList<>();
-        lista = solicitacaoDAO.getAll(Solicitacao.class, "Solicitacao.findAll");
-        imagemDAO = new DAO<>("Projeto-ExtensaoPU");
+        lista_fotos = new ArrayList<>();
+        imagemDAO = new DAO<>("Projeto-ExtensaoPU"); 
         novo_comentario = false;
+        lista = solicitacaoDAO.getAll(Solicitacao.class, "Solicitacao.findAll");
     }
 
     @PreDestroy
@@ -63,6 +72,14 @@ public class FeedSolicitacoesMB implements Serializable {
         solicitacaoDAO.close();
         imagemDAO.close();
         comentarioDAO.close();
+    }
+
+    public Profile getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Profile perfil) {
+        this.perfil = perfil;
     }
 
     public Requerente getRequerente() {
@@ -95,8 +112,6 @@ public class FeedSolicitacoesMB implements Serializable {
 
     public void setImagem(Imagem imagem) {
         this.imagem = imagem;
-        image = new DefaultStreamedContent();
-        System.out.println("carregando imagem "+imagem.getNome());
     }
 
     public Solicitacao getSolicitacao() {
@@ -105,6 +120,14 @@ public class FeedSolicitacoesMB implements Serializable {
 
     public void setSolicitacao(Solicitacao solicitacao) {
         this.solicitacao = solicitacao;
+    }
+
+    public List<StreamedContent> getLista_fotos() {
+        return lista_fotos;
+    }
+
+    public void setLista_fotos(List<StreamedContent> lista_fotos) {
+        this.lista_fotos = lista_fotos;
     }
 
     public List<Solicitacao> getLista() {
@@ -125,23 +148,21 @@ public class FeedSolicitacoesMB implements Serializable {
 
     public StreamedContent getImage() {
 
-        if(imagem != null){
-            System.out.println("convertendo imagem "+imagem.getNome());
-            InputStream is = new ByteArrayInputStream(imagem.getDados());
-            image = new DefaultStreamedContent(is);
-
-            return image;
-        }
-        else{
-            System.out.println("NNNNUUUUULLLLLL"); 
-            return null;
-        }
+        return image;
     }
 
     public void setImage(StreamedContent image) {
         this.image = image;
     }
 
+    public StreamedContent getFoto(Solicitacao slc){
+        
+        InputStream is;
+        is = new ByteArrayInputStream(slc.getImagem().getDados());
+        image = new DefaultStreamedContent(is);
+        return image;
+    }
+    
     public void registrarComentario(Solicitacao slc){
         comentario.setSolicitacao(slc);
         comentario.setDataComentario(new Date(System.currentTimeMillis()));
@@ -166,12 +187,12 @@ public class FeedSolicitacoesMB implements Serializable {
 
     public void carregarRequerente(){
 
-        Profile perfil = new Profile();
         perfil = (Profile) Sessao.getObjectSession("perfil");
         if(perfil != null){
                         
-            requerente.setId(perfil.getValidatedId());
-
+            if(perfil.getValidatedId() != null)
+                requerente.setId(perfil.getValidatedId());
+            
             if(perfil.getFullName() != null)
                 requerente.setNome(perfil.getFullName());
             if(perfil.getEmail() != null)
@@ -185,6 +206,11 @@ public class FeedSolicitacoesMB implements Serializable {
                         
         }
     }
+
+    public void atualizar() throws IOException{
+        lista = solicitacaoDAO.getAll(Solicitacao.class, "Solicitacao.findAll");
+    }
+    
 }
 
 
