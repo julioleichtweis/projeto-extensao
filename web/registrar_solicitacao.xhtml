@@ -12,79 +12,96 @@
         <title>Projeto de extensão</title>
         <meta name="if-sul" content="projeto"></meta>
         <h:outputStylesheet library="css" name="registarSolicitacao.css" />
-        <script src="resources/javascript/scripts.js" type="text/javascript"></script>
+        <!--script src="resources/javascript/scripts.js" type="text/javascript"></script-->
         <script src="resources/javascript/googleMaps.js" type="text/javascript"></script>
-        <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCDeDTdxDcvnRufBvILmxZUgD3U947b9t4" async="" defer="defer" type="text/javascript"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCDeDTdxDcvnRufBvILmxZUgD3U947b9t4&amp;sensor=false"></script>
         <script src="http://www.google.com/jsapi" type="text/javascript"></script>
     </h:head>
     <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
         <ui:include src="header.xhtml"/>
         <b:container id="container">
             <b:form id="formularios" horizontal="true" enctype="multipart/form-data">
-                <b:container class="confirmacao" rendered="#{registarSolicitacaoMB.confirmacao}" style="width: 90%;margin-left: 4%">
-                    <h:outputText value="#{registarSolicitacaoMB.solicitacao.descricao}" style="color: blue;text-align: center;margin-bottom: 1%;width: 100%"/><br/>
-                    <p:graphicImage value="#{registarSolicitacaoMB.image}" alt=" erro ao carregar imagem " cache="false"
-                                    style="width: 80%;height: 40%;margin: 3% 0 3% 10%;max-height: 350px"/>
-                    <b:commandButton id="botao_confirmar" value="Confirmar" style="width: 70%;float: bottom;position: relative;height: 50px;margin: 4% 0 0 15%;background-color: blue;color: white" action="#{registarSolicitacaoMB.concluir()}"/>
-                    <b:commandButton id="botao_cancelar" value="Cancelar" style="width: 70%;float: bottom;position: relative;height: 50px;margin: 3% 0 4% 15%;background-color: darkorange;color: white" action="#{registarSolicitacaoMB.cancelar()}"/>
+                <b:container class="confirmacao" rendered="#{registarSolicitacaoMB.confirmacao}">
+                    <h:outputText class="detalhes_confirmacao" value="Enviada por : #{registarSolicitacaoMB.requerente.nome}"/><br/>
+                    <h:outputText class="detalhes_confirmacao" value="Endereço : #{registarSolicitacaoMB.solicitacao.endereco}"/><br/>
+                    <h:outputText class="detalhes_confirmacao" value="Descrição : #{registarSolicitacaoMB.solicitacao.descricao}"/><br/>
+                    <p:graphicImage class="foto_confirmacao" value="#{registarSolicitacaoMB.image}" alt=" erro ao carregar imagem " cache="false"/>
+                    <p:commandButton class="botao_confirmar" value="Confirmar" onclick="PF('dlg2').show();"/>
+                    <b:commandButton class="botao_cancelar" value="Cancelar" action="#{registarSolicitacaoMB.cancelar()}"/>
                 </b:container>
                 <h1 class="titulo">Prefeitura municipal de Bagé a serviço da população</h1>
                 <b:container class="form_servico" style="width: 90%;">
                     <h3 class="subtitulo">Descrição do servico</h3>
-                    <h:outputText value="Adicionar foto" style="color: chocolate;float: left;position: relative;font-size: 15px;margin-left: 3%"/>
-                    <p:growl id="messages3" showDetail="true" />
-                    <p:fileUpload value="#{registarSolicitacaoMB.file}" class="file_upload"
+                    <h:outputText class="label_foto" value="Adicionar foto"/>
+                    <p:growl id="messages3" showDetail="true"/>
+                    <p:fileUpload class="file_upload" value="#{registarSolicitacaoMB.file}"
                                   cancelLabel="Cancelar" label="Escolher foto" uploadLabel="Upload"
                                   fileUploadListener="#{registarSolicitacaoMB.upload}"
                                   invalidFileMessage="Somente arquivos .jpg, .png ou .gif"
                                   allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="true"
                                   mode="advanced" skinSimple="true" update="imagem" required="true"
-                                  sizeLimit="10000000" invalidSizeMessage="Tamanho maximo da imagem : 1mb"/>
+                                  sizeLimit="10000000" invalidSizeMessage="Tamanho maximo da imagem : 10mb"/>
                     <p:graphicImage id="imagem" value="#{registarSolicitacaoMB.image}" alt=" " cache="false"
-                                    style="width: 80%;height: 10%;margin: 1% 0 3% 10%;max-height: 350px"/>
-                    <b:inputTextarea class="input_descricao" label-style="text-align : left;margin-top: 10px;color: chocolate;min-width: 100px;margin-left: 4%" style="margin: auto;height: 180px;margin-bottom: 5%;width: 90%;margin-left: 5%"
-                                     value="#{registarSolicitacaoMB.solicitacao.descricao}" label="Descrição" tooltip="descrição do serviço" required="true" validatorMessage="A descrição é de preenchimento obrigatorio!">
+                                    style="width: 60%;height: 10%;margin: 1% 0 3% 20%;max-height: 350px"/>
+                    <b:inputTextarea class="descricao" value="#{registarSolicitacaoMB.solicitacao.descricao}"
+                                     label-style="text-align : left;margin-top: 10px;color: chocolate;min-width: 100px;margin-left: 4%"
+                                     label="Descrição" tooltip="descrição do serviço" required="true" 
+                                     validatorMessage="A descrição é de preenchimento obrigatorio!">
                         <f:validateLength minimum="10" maximum="400"/>
                     </b:inputTextarea>
                     <p:growl id="messages" showDetail="true" />
-                    <h:outputText value="Adicionar localização" style="width: 100%;color: chocolate;font-size: 16px;margin: 40% 0 1% 1%"/>
-                    <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="15" type="HYBRID" style="width:100%;height:300px;margin:3% 0 6% 0"
+                    <h:outputText class="label_localizacao" value="Adicionar localização"/>
+
+                    <p:gmap id="gmap" center="-31.334046274414,-54.10234451293945" zoom="15" type="HYBRID" 
+                            style="width:100%;height:300px;margin:1% 0 3% 0"
                             model="#{registarSolicitacaoMB.mapa}" onPointClick="handlePointClick(event);" widgetVar="map">
                         <p:ajax event="markerDrag" listener="#{registarSolicitacaoMB.onMarkerDrag(event)}"/>
                         <!--p:ajax event="pointSelect" listener=""/-->
                     </p:gmap>
+
+                    <h:outputText class="label_endereco" value="Endereço"/>
+
+                    <input id="txtEndereco" name="txtEndereco" value="#{registarSolicitacaoMB.solicitacao.endereco}"/>
+
                     <b:selectBooleanCheckbox value="#{registarSolicitacaoMB.solicitacao.anonimo}" label="Anônimo..?" 
                                              label-style="color: chocolate;margin: 0 0 7% 1%;text-align: left"  
                                              label-small-screen="1" small-screen="2"/>
                 </b:container>
-                <h:commandButton class="continuar" value="continuar" action="#{registarSolicitacaoMB.continuar()}" actionListener="#{registarSolicitacaoMB.continuar()}"
-                                 style="width: 70%;margin: 5% 0 5% 15%;background-color: blue;color: white;height: 50px;text-align: center;font-size: 18px;border-radius: 8px"/>
+                <h:commandButton class="continuar" value="continuar" action="#{registarSolicitacaoMB.continuar()}" actionListener="#{registarSolicitacaoMB.continuar()}"/>
             </b:form>
         </b:container>
-        <p:dialog widgetVar="dlg" showEffect="fade">
+        <p:dialog widgetVar="dlg" showEffect="fade" modal="true">
             <h:form prependId="false">
                 <h:panelGrid columns="2">
-                    <h:outputLabel for="title" value="Confirmação" style="text-align: center"/>
-                    <h:inputHidden id="title" value="#{registarSolicitacaoMB.localizacao.titulo}"/>
+                    <h:outputLabel for="title" value="Confirmar localização ?" style="text-align: center"/>
                     <f:facet name="footer">
-                        <p:commandButton value="Continuar" onclick="adicionarMarcador()"/>
-                        <p:commandButton value="Cancel" onclick="return cancelar()"/>
+                        <p:commandButton value="Confirmar" onclick="adicionarMarcador()"/>
+                        <p:commandButton value="Cancelar" onclick="return cancelar()"/>
                     </f:facet>
                 </h:panelGrid>
                 <h:inputHidden id="lat" value="#{registarSolicitacaoMB.localizacao.latitude}"/>
                 <h:inputHidden id="lng" value="#{registarSolicitacaoMB.localizacao.longitude}"/>
+                <h:inputHidden id="endereco" value="#{registarSolicitacaoMB.solicitacao.endereco}"/>
             </h:form>
         </p:dialog>
-        <p:dialog widgetVar="dlg2" showEffect="fade">
-            <h:form prependId="false" style="width: 60%;height: 50%;">
-                <h:outputLabel for="title" value="SUCESSO AO ENVIAR A SOLICITAÇÃO" style="text-align: center"/>
-                <f:facet name="content">
-                    <p:outputLabel value="Sua solicitação foi enviada com sucesso, assim que possível iremos analiza-la e encaminha-la para
-                                   o setor responsável, e manteremos o contato enviando para o seu email atualizações sobre a sua requisição."/>
-                </f:facet>
-                <f:facet name="footer">
-                    <p:commandButton value="Continuar" onclick="adicionarMarcador()" style="width: 80%;margin-left: 10%;border: 2px solid white;color: white;background-color: blue"/>
-                </f:facet>
+        <p:dialog widgetVar="dlg2" showEffect="clip" hideEffect="clip" responsive="true" dynamic="true" width="80%" 
+                  modal="true" height="300px" header="CONFIRMAÇÃO">
+            <h:form prependId="false" style="text-align: center">
+                <h:panelGrid columns="1">
+                    <h:outputLabel value="Assim que clicar no botão ENVIAR SOLICITAÇÃO, sua solicitação será enviada, e assim que possível iremos 
+                                   analiza-la e encaminha-la para o setor responsável, e manteremos o contato
+                                   enviando para o seu email atualizações sobre a sua requisição." style="border: 2px solid black;width: 80%"/>
+                    <p:panelGrid style="border: 2px solid black;margin-top: 2%">
+                        <h:outputLabel value="Confirmação de email" style="width: 100%;margin-top: 3%" />
+                        <p:inputText value="#{registarSolicitacaoMB.requerente.email}" style="width: 80%;margin: auto"/>
+                        <p:commandButton value="Alterar" onclick="alert('Sucesso ao atualizar o endereço de email')"
+                                         style="width: 80%;background-color: darkorange;margin: auto;margin:1% 0 3% 0">
+                            <f:ajax event="click" listener="#{registarSolicitacaoMB.alterarEmail()}"/>
+                        </p:commandButton>
+                    </p:panelGrid>
+                    <p:commandButton value="ENVIAR SOLICITAÇÃO" actionListener="#{registarSolicitacaoMB.concluir()}" ajax="false"
+                                     onclick="alert('Sua solicitação foi enviada com sucesso!')" style="width: 80%;background-color: greenyellow;margin: auto"/>
+                </h:panelGrid>
             </h:form>
         </p:dialog>
     </h:body>

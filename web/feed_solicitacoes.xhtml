@@ -21,19 +21,21 @@
             <p:repeat value="#{feedSolicitacoesMB.lista}" var="solicitacao">
                 <p:graphicImage value="#{solicitacao.requerente.foto}" style="height: 80px;position: relative;float: left;margin: 1% 0 0 1%"/>
                 <div style="position: relative;float: left;margin: 1% 0 0 2%;width: 70%;min-height: 80px">
-                    <p:outputLabel value="  #{solicitacao.requerente.nome}" style="color: white"/><br/>
-                    <p:outputLabel value="dia: -" style="color: gray;font-size: 12px"/>
+                    <p:outputLabel value="Enviada por :  #{solicitacao.requerente.nome}" style="color: white"/><br/>
+                    <p:outputLabel value="No dia -" style="color: white;"/>
                     <p:outputLabel value="#{solicitacao.dataSolicitacao}" style="color: white">
                         <f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR"/>
                     </p:outputLabel>
-                    <p:outputLabel value=",  às: -" style="color: gray;font-size: 12px"/>
+                    <p:outputLabel value=",  às: -" style="color: white;"/>
                     <p:outputLabel value="#{solicitacao.dataSolicitacao}" style="color: white">
                         <f:convertDateTime pattern="HH:mm" locale="pt_BR"/>
-                    </p:outputLabel>
+                    </p:outputLabel><br/>
+                    <p:outputLabel value="Local :  #{solicitacao.endereco}" style="color: white;width: 100%"/>
                 </div><br/>
+                <p:outputLabel style="width: 100%;border-top: 1px solid black"/>
                 <p:outputLabel value="#{solicitacao.descricao}" style="width: 70%;margin-left:15%;text-align: center;color: white"/>
                 <p:graphicImage value="#{feedSolicitacoesMB.getFoto(solicitacao)}" alt=" erro ao carregar imagem " cache="false" stream="streamed"
-                                style="width: 50%;height: 300px;margin: 3% 0 0 25%;min-width: 200px"/>
+                                style="width: 50%;height: 200px;margin: 3% 0 0 25%;min-width: 200px"/>
                 <div style="width: 80%;min-width: 350px;margin: auto">
                     <h4 style="text-align: center;color: blue">Comentarios</h4>
                     <p:panelGrid id="coments">

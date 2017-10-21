@@ -1,5 +1,6 @@
 package controladores;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 import persistencia.DAO;
+import util.Email;
 import util.Sessao;
 
 @Named(value = "registarSolicitacaoMB")
@@ -128,7 +130,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
     
     public StreamedContent getImage() {
         if(imagem != null){
-            InputStream is = new ByteArrayInputStream(imagem.getDados());
+            InputStream is = new ByteArrayInputStream(imagem.getDados()); 
             image = new DefaultStreamedContent(is);
         }
         else{
@@ -164,12 +166,14 @@ public class RegistrarSolicitacaoMB implements Serializable {
     }
     
     public void continuar(){
-        if(imagem != null && localizacao.getLatitude() != null)
+        if(imagem != null)// && localizacao.getLatitude() != null)
             this.confirmacao = true;
         if(imagem == null)
             FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage("Faça o upload da imagem para continuar"));
         if(localizacao.getLatitude() == null)
             FacesContext.getCurrentInstance().addMessage("Erro", new FacesMessage("Indique a localização no mapa"));
+        
+       
     }
     
     public void cancelar(){
@@ -186,6 +190,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
         solicitacao.setLocalizacao(localizacao);
         solicitacao.setImagem(imagem);
         solicitacaoDAO.insert(solicitacao); 
+        Email.enviarEmail(requerente.getEmail(), solicitacao.getDescricao());
         imagem = null;
         localizacao = new Localizacao();
         solicitacao = new Solicitacao();
@@ -198,8 +203,8 @@ public class RegistrarSolicitacaoMB implements Serializable {
 
         if (file != null){
             imagem = new Imagem();
-            imagem.setDados(IOUtils.toByteArray(file.getInputstream()));
-            imagem.setNome(file.getFileName());
+            imagem.setDados(IOUtils.toByteArray(file.getInputstream())); 
+            imagem.setNome(file.getFileName()); 
 
             image = new DefaultStreamedContent(file.getInputstream());
         }
@@ -208,6 +213,7 @@ public class RegistrarSolicitacaoMB implements Serializable {
     public void carregarRequerente(){
         
         Profile perfil = (Profile) Sessao.getObjectSession("perfil");
+
         if(perfil != null){
                         
             requerente.setId(perfil.getValidatedId());
@@ -227,11 +233,14 @@ public class RegistrarSolicitacaoMB implements Serializable {
             
             lista_requerente = requerenteDAO.getByNamedQuery(Requerente.class,"Requerente.findById","id", perfil.getValidatedId());
             
-            if(!lista_requerente.isEmpty())
-                return;
-
-            requerenteDAO.insert(requerente);
+            if(lista_requerente.isEmpty())
+                requerenteDAO.insert(requerente);
         }
+        System.out.println("identificação requerente = "+requerente.getId());
+        //requerente = requerenteDAO.get(Requerente.class, "1964940357098587");
     }
 
+    public void alterarEmail(){
+        requerenteDAO.update(requerente);
+    }
 }

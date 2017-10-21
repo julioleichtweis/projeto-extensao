@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="css" name="registarSolicitacao.css" />
+        <f:metadata>
+            <f:event listener="#{admGerenciarSolicitacoesMB.atualizar()}" type="preRenderView"/>
+        </f:metadata>
+    </h:head>
+    <h:body style="background-image: url('resources/imagens/bage_aerea.jpg'); background-size: 100% 100%;background-attachment: fixed;background-position: center;background-repeat: no-repeat;">
+        <ui:include src="header_administracao.xhtml"/>
+        <h1 class="titulo">Solicitacoes recebidas</h1>
+        <h:form style="min-width: 350px;width: 80%;margin: auto;background-color: rgba(0, 0, 0, 0.6)">
+            <p:repeat value="#{admGerenciarSolicitacoesMB.lista}" var="solicitacao">
+                <p:commandButton value="ENCAMINHAR SOLICITACAO" onclick="PF('dlg').show()" style="float: right"/>
+                <p:graphicImage value="#{solicitacao.requerente.foto}" style="height: 7rem;position: relative;float: left;margin: 1% 0 0 1%"/>
+                <div style="position: relative;float: left;margin: 1% 0 0 2%;width: 60%;min-height: 80px">
+                    <p:outputLabel value="Enviada por :  #{solicitacao.requerente.nome}" style="color: white"/><br/>
+                    <p:outputLabel value="No dia -" style="color: white;"/>
+                    <p:outputLabel value="#{solicitacao.dataSolicitacao}" style="color: white">
+                        <f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR"/>
+                    </p:outputLabel>
+                    <p:outputLabel value=",  às: -" style="color: white;"/>
+                    <p:outputLabel value="#{solicitacao.dataSolicitacao}" style="color: white">
+                        <f:convertDateTime pattern="HH:mm" locale="pt_BR"/>
+                    </p:outputLabel><br/>
+                    <p:outputLabel value="Local :  #{solicitacao.endereco}" style="color: white;width: 100%"/>
+                </div><br/>
+                <p:outputLabel style="width: 100%;border-top: 1px solid black"/>
+                <p:outputLabel value="#{solicitacao.descricao}" style="width: 70%;margin-left:15%;text-align: center;color: white"/>
+                <p:graphicImage value="#{admGerenciarSolicitacoesMB.getFoto(solicitacao)}" alt=" erro ao carregar imagem " cache="false" stream="streamed"
+                                style="width: 50%;height: 300px;margin: 3% 0 0 25%;min-width: 200px"/>
+                <div style="width: 80%;min-width: 350px;margin: auto">
+                    <p:outputLabel rendered="#{!admGerenciarSolicitacoesMB.getListaComentarios(solicitacao).isEmpty()}" style="width: 100%">
+                        <h4 style="text-align: center;color: blue">Comentarios</h4>
+                    </p:outputLabel>
+                    <p:panelGrid id="coments" style="width: 100%">
+                        <p:repeat id="repeat" value="#{admGerenciarSolicitacoesMB.getListaComentarios(solicitacao)}" var="coment">
+                            <div style="width: 70%;margin: 0 0 1% 10%;border: 1px gray groove;float: left;color: white">
+                                <p:graphicImage value="#{coment.requerente.foto}" style="height: 4rem"/>
+                                <p:outputLabel value="#{coment.requerente.nome}, as -"/>
+                                <p:outputLabel value="#{coment.dataComentario}" style="font-size: 10px;color: gray">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" locale="pt_BR"/>
+                                </p:outputLabel>
+                                <br/>
+                                <p:outputLabel value="#{coment.comentario}" style="color: #d3cccc;width: 80%;margin-left: 10%;text-align: center;border-top: 1px solid black"/>
+                            </div>
+                            <p:commandButton value="Excluir" style="float: left;max-width: 18%" actionListener="#{admGerenciarSolicitacoesMB.excluirComentario(coment)}" ajax="false">
+                                <!--p:ajax event="click" listener="{admGerenciarSolicitacoesMB.excluirComentario(coment)}" update="repeat"/-->
+                            </p:commandButton>
+                        </p:repeat>
+                    </p:panelGrid>
+                </div>
+                <br/>
+                <hr/><hr/>
+            </p:repeat>
+        </h:form>
+        <p:dialog widgetVar="dlg" showEffect="clip" hideEffect="clip" responsive="true" dynamic="true" width="70%" 
+                  modal="true" height="300px">
+            <h:form prependId="false" style="text-align: center">
+                <h:outputLabel value="Gerar protocolo" style="width: 100%"/>
+                <h:selectOneMenu value="#{admGerenciarSolicitacoesMB.lotacao}" converter="conversorLotacao" class="form-control" >
+                    <f:selectItems value="#{admGerenciarSolicitacoesMB.lista_lotacoes}" var="lotacao" itemLabel="#{lotacao}" itemValue="#{lotacao}"/>
+                </h:selectOneMenu>
+                <p:commandButton value="ENVIAR" ajax="false"
+                                 onclick="alert('Sucesso ao enviar solicitacao!')" style="width: 80%;background-color: greenyellow;margin: auto"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

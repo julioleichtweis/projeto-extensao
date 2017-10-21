@@ -104,13 +104,6 @@ public class Imagem implements Serializable {
         return "modelos.Imagem[ id=" + id + " ]";
     }
 
-    public byte[] getDados() {
-        return dados;
-    }
-
-    public void setDados(byte[] dados) {
-        this.dados = dados;
-    }
 
     public StreamedContent getImage(){
 
@@ -119,5 +112,13 @@ public class Imagem implements Serializable {
         image = new DefaultStreamedContent(is);
         System.out.println("to aqui ta tentado carregar a imagem "+this.getNome());
         return image;
+    }
+
+    public byte[] getDados() {
+        return dados;
+    }
+
+    public void setDados(byte[] dados) {
+        this.dados = dados;
     }
 }

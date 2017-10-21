@@ -6,7 +6,6 @@
 package modelos;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,27 +14,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author root
  */
 @Entity
-@Table(name = "setor")
+@Table(name = "lotacao")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Setor.findAll", query = "SELECT s FROM Setor s")
-    , @NamedQuery(name = "Setor.findById", query = "SELECT s FROM Setor s WHERE s.id = :id")
-    , @NamedQuery(name = "Setor.findBySigla", query = "SELECT s FROM Setor s WHERE s.sigla = :sigla")
-    , @NamedQuery(name = "Setor.findByNome", query = "SELECT s FROM Setor s WHERE s.nome = :nome")
-    , @NamedQuery(name = "Setor.findByResponsavel", query = "SELECT s FROM Setor s WHERE s.responsavel = :responsavel")
-    , @NamedQuery(name = "Setor.findByEmail", query = "SELECT s FROM Setor s WHERE s.email = :email")})
-public class Setor implements Serializable {
+    @NamedQuery(name = "Lotacao.findAll", query = "SELECT l FROM Lotacao l")
+    , @NamedQuery(name = "Lotacao.findById", query = "SELECT l FROM Lotacao l WHERE l.id = :id")
+    , @NamedQuery(name = "Lotacao.findBySigla", query = "SELECT l FROM Lotacao l WHERE l.sigla = :sigla")
+    , @NamedQuery(name = "Lotacao.findByNome", query = "SELECT l FROM Lotacao l WHERE l.nome = :nome")
+    , @NamedQuery(name = "Lotacao.findByEmail", query = "SELECT l FROM Lotacao l WHERE l.email = :email")})
+public class Lotacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,20 +45,15 @@ public class Setor implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "nome")
     private String nome;
-    @Size(max = 2147483647)
-    @Column(name = "responsavel")
-    private String responsavel;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="E-mail inválido")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 2147483647)
     @Column(name = "email")
     private String email;
-    @OneToMany(mappedBy = "setor")
-    private List<Solicitacao> solicitacaoList;
 
-    public Setor() {
+    public Lotacao() {
     }
 
-    public Setor(Integer id) {
+    public Lotacao(Integer id) {
         this.id = id;
     }
 
@@ -90,29 +81,12 @@ public class Setor implements Serializable {
         this.nome = nome;
     }
 
-    public String getResponsavel() {
-        return responsavel;
-    }
-
-    public void setResponsavel(String responsavel) {
-        this.responsavel = responsavel;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @XmlTransient
-    public List<Solicitacao> getSolicitacaoList() {
-        return solicitacaoList;
-    }
-
-    public void setSolicitacaoList(List<Solicitacao> solicitacaoList) {
-        this.solicitacaoList = solicitacaoList;
     }
 
     @Override
@@ -125,10 +99,10 @@ public class Setor implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Setor)) {
+        if (!(object instanceof Lotacao)) {
             return false;
         }
-        Setor other = (Setor) object;
+        Lotacao other = (Lotacao) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -137,7 +111,7 @@ public class Setor implements Serializable {
 
     @Override
     public String toString() {
-        return "modelos.Setor[ id=" + id + " ]";
+        return getNome();
     }
     
 }

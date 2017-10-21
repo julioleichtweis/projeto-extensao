@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package modelos;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,18 +12,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author root
- */
 @Entity
 @Table(name = "solicitacao")
 @XmlRootElement
@@ -40,8 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Solicitacao.findByDescricao", query = "SELECT s FROM Solicitacao s WHERE s.descricao = :descricao")
     , @NamedQuery(name = "Solicitacao.findByStatus", query = "SELECT s FROM Solicitacao s WHERE s.status = :status")
     , @NamedQuery(name = "Solicitacao.findByAnonimo", query = "SELECT s FROM Solicitacao s WHERE s.anonimo = :anonimo")
-    , @NamedQuery(name = "Solicitacao.findByCurtidas", query = "SELECT s FROM Solicitacao s WHERE s.curtidas = :curtidas")
-    , @NamedQuery(name = "Solicitacao.findByRequerente", query = "SELECT s FROM Solicitacao s WHERE s.requerente = :requerente")})
+    , @NamedQuery(name = "Solicitacao.findByEndereco", query = "SELECT s FROM Solicitacao s WHERE s.endereco = :endereco")})
 public class Solicitacao implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,11 +47,9 @@ public class Solicitacao implements Serializable {
     private Character status;
     @Column(name = "anonimo")
     private Boolean anonimo;
-    @Column(name = "curtidas")
-    private Integer curtidas;
-    @ManyToOne
-    @JoinColumn(name = "requerente", referencedColumnName = "id")
-    private Requerente requerente;
+    @Size(max = 2147483647)
+    @Column(name = "endereco")
+    private String endereco;
     @JoinColumn(name = "funcionario", referencedColumnName = "id")
     @ManyToOne
     private Funcionario funcionario;
@@ -77,11 +62,12 @@ public class Solicitacao implements Serializable {
     @JoinColumn(name = "prioridade", referencedColumnName = "id")
     @ManyToOne
     private Prioridade prioridade;
+    @JoinColumn(name = "requerente", referencedColumnName = "id")
+    @ManyToOne
+    private Requerente requerente;
     @JoinColumn(name = "setor", referencedColumnName = "id")
     @ManyToOne
-    private Setor setor;
-    @OneToMany(mappedBy = "solicitacao")
-    private List<Comentario> comentarioList;
+    private Lotacao lotacao;
 
     public Solicitacao() {
     }
@@ -130,20 +116,12 @@ public class Solicitacao implements Serializable {
         this.anonimo = anonimo;
     }
 
-    public Integer getCurtidas() {
-        return curtidas;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setCurtidas(Integer curtidas) {
-        this.curtidas = curtidas;
-    }
-
-    public Requerente getRequerente() {
-        return requerente;
-    }
-
-    public void setRequerente(Requerente requerente) {
-        this.requerente = requerente;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
     public Funcionario getFuncionario() {
@@ -178,21 +156,20 @@ public class Solicitacao implements Serializable {
         this.prioridade = prioridade;
     }
 
-    public Setor getSetor() {
-        return setor;
+    public Requerente getRequerente() {
+        return requerente;
     }
 
-    public void setSetor(Setor setor) {
-        this.setor = setor;
+    public void setRequerente(Requerente requerente) {
+        this.requerente = requerente;
     }
 
-    @XmlTransient
-    public List<Comentario> getComentarioList() {
-        return comentarioList;
+    public Lotacao getLotacao() {
+        return lotacao;
     }
 
-    public void setComentarioList(List<Comentario> comentarioList) {
-        this.comentarioList = comentarioList;
+    public void setLotacao(Lotacao lotacao) {
+        this.lotacao = lotacao;
     }
 
     @Override

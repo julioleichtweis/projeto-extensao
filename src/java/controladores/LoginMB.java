@@ -1,11 +1,9 @@
 package controladores;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -25,8 +23,8 @@ public class LoginMB implements Serializable{
     private SocialAuthManager manager;
     private Profile profile;
     
-    private final String mainURL = "http://192.168.0.40:31812/Projeto_Extensao/faces/registrar_solicitacao.xhtml";
-    private final String redirectURL = "http://192.168.0.40:31812/Projeto_Extensao/faces/redirect_home.xhtml";
+    private final String mainURL = "http://localhost:31812/Projeto_Extensao/faces/registrar_solicitacao.xhtml";
+    private final String redirectURL = "http://localhost:31812/Projeto_Extensao/faces/redirect_home.xhtml";
     private final String provider = "facebook";
         
     public LoginMB() {
@@ -61,6 +59,7 @@ public class LoginMB implements Serializable{
             this.setProfile(aut.getUserProfile());
             Sessao.putObjectSession("perfil", getProfile());
         }
+
         FacesContext.getCurrentInstance().getExternalContext().redirect(mainURL);
     }
 

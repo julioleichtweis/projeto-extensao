@@ -4,6 +4,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import modelos.Lotacao;
 import modelos.Solicitacao;
 
 public class DAO<T>{
@@ -37,6 +38,9 @@ public class DAO<T>{
     public T get(Class<T> c, long id){
         return this.em.find(c, id);
     }
+    public T get(Class<T> c, String id){
+        return this.em.find(c, id);
+    }
 
     public T get(Class<T> c, int id){
         return this.em.find(c, id);
@@ -65,6 +69,12 @@ public class DAO<T>{
         Query query = this.em.createNamedQuery(sql,c);
         query.setParameter(parametro1,valor1);
         return query.getResultList();
+    }
+
+    public T getLotacaoPorDescricao(String descricao){
+        Query query = this.em.createNamedQuery("Lotacao.findByCodNome",Lotacao.class);
+        query.setParameter("sigla",descricao);
+        return (T)query.getSingleResult();
     }
 
     public void close(){
